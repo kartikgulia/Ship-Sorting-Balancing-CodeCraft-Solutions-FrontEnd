@@ -3,14 +3,9 @@ import GridComp from "../components/SelectContainerComponents/GridComponent";
 import EnterNameOfContainerComp from "../components/SelectContainerComponents/EnterNameOfContainerComponent";
 
 const SelectContainerScreen = () => {
-  // Generate a 9x13 array of strings
-  const gridData = Array.from({ length: 9 }, (_, rowIndex) =>
-    Array.from({ length: 13 }, (_, colIndex) => `R${rowIndex}C${colIndex}`)
-  );
-
   return (
     <div style={containerStyle}>
-      <GridComp gridData={gridData} />
+      <GridComp />
       <EnterNameOfContainerComp />
     </div>
   );

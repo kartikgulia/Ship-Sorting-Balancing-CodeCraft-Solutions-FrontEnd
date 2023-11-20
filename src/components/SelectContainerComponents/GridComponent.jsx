@@ -1,23 +1,40 @@
 import React, { useState, useEffect } from "react";
 import ContainerComponent from "./ContainerComponent";
 
-export default function GridComp({ gridData }) {
-  // Initialize and update state as previously described
-  // Initialize state for the 8x12 grid, skipping the first row and first column
-  const initialGridState = gridData
-    .slice(1) // Skip the first row
-    .map((row) => row.slice(1).map(() => false)); // Skip the first column of each row
-  const [selectedItems, setSelectedItems] = useState(initialGridState);
+export default function GridComp() {
+  // State for the dynamic grid data
+  const [gridData, setGridData] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
 
-  //   useEffect(() => {
-  //     console.log(selectedItems); // This will log the updated state
-  //   }, [selectedItems]); // The effect runs whenever selectedItems changes
+  const fetchGridInfo = async () => {
+    try {
+      const response = await fetch("http://127.0.0.1:5000/getGridInfo");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      let data = await response.json();
+
+      // Process and update gridData state
+      const processedGrid = data.grid.slice(1).map((row) => row.slice(1));
+      setGridData(processedGrid);
+
+      // Update selectedItems state based on the new gridData
+      const newSelectedItems = processedGrid.map((row) => row.map(() => false));
+      setSelectedItems(newSelectedItems);
+    } catch (error) {
+      console.error("Error fetching grid info:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchGridInfo();
+  }, []);
 
   const handleItemClick = (rowIndex, colIndex) => {
     const newState = selectedItems.map((row, rIndex) =>
       row.map((item, cIndex) => {
         if (rIndex === rowIndex && cIndex === colIndex) {
-          return !item; // Toggle the state
+          return !item;
         }
         return item;
       })
@@ -27,12 +44,12 @@ export default function GridComp({ gridData }) {
 
   return (
     <div style={gridStyle}>
-      {gridData.slice(1).map((row, rowIndex) => (
+      {gridData.map((row, rowIndex) => (
         <React.Fragment key={rowIndex}>
-          {row.slice(1).map((item, colIndex) => (
+          {row.map((item, colIndex) => (
             <ContainerComponent
               key={`${rowIndex}-${colIndex}`}
-              value={item}
+              value={item.name}
               isSelected={selectedItems[rowIndex][colIndex]}
               onClick={() => handleItemClick(rowIndex, colIndex)}
             />
