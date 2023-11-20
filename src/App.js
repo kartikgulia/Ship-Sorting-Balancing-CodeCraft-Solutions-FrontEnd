@@ -5,6 +5,7 @@ import ViewLog from "./screens/viewlogs";
 import ReportIssue from "./report-issue";
 import Tutorial from "./screens/tutorial";
 // import Home from './home'
+import SelectContainerScreen from "./screens/SelectContainersScreen";
 
 const App = () => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -21,6 +22,8 @@ const App = () => {
         return <Tutorial />;
       // case 'Home':
       //     return <Home/>;
+      case "SelectContainer":
+        return <SelectContainerScreen />;
       default:
         return null;
     }
@@ -36,6 +39,7 @@ const App = () => {
     "ReportIssue",
     "Tutorial",
     "Home",
+    "SelectContainer",
   ];
 
   return (
