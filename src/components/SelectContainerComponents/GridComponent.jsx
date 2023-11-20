@@ -82,6 +82,7 @@ const gridStyle = {
   gridTemplateColumns: "repeat(12, 1fr)", // 12 columns
   gridTemplateRows: "repeat(8, 1fr)", // 8 rows
   gap: "10px", // Optional: Space between grid items
+  margin: "20px",
 };
 
 const cellStyle = {

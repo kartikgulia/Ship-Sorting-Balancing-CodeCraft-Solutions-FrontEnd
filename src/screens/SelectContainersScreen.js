@@ -18,17 +18,16 @@ const SelectContainerScreen = () => {
   return (
     <div style={containerStyle}>
       <GridComp onSelectedItemsChange={handleSelectedItems} />
-      <EnterNameOfContainerComp />
-      {/* You can use selectedNames here for further processing */}
+      <EnterNameOfContainerComp selectedNames={selectedNames} />
     </div>
   );
 };
 
 const containerStyle = {
   display: "flex",
-  flexDirection: "column",
-  justifyContent: "center", // Center vertically
-  alignItems: "center", // Center horizontally
+  flexDirection: "row", // Change to row for side-by-side layout
+  justifyContent: "center", // Center horizontally
+  alignItems: "center", // Center vertically
   height: "100vh", // Full viewport height
 };
 
