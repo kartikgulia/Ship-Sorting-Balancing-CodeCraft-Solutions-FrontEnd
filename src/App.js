@@ -1,26 +1,26 @@
-import React, { useState } from 'react';
-import './App.css';
-import SignIn from './signin';
-import ViewLog from './viewlogs';
-import ReportIssue from './report-issue';
-import Tutorial from './tutorial';
-import Home from './home'
+import React, { useState } from "react";
+import "./App.css";
+import SignIn from "./signin";
+import ViewLog from "./viewlogs";
+import ReportIssue from "./report-issue";
+import Tutorial from "./tutorial";
+// import Home from './home'
 
 const App = () => {
   const [selectedOption, setSelectedOption] = useState(null);
 
   const renderComponent = () => {
     switch (selectedOption) {
-      case 'SignIn':
+      case "SignIn":
         return <SignIn />;
-      case 'ViewLog':
+      case "ViewLog":
         return <ViewLog />;
-      case 'ReportIssue':
+      case "ReportIssue":
         return <ReportIssue />;
-      case 'Tutorial':
+      case "Tutorial":
         return <Tutorial />;
-      case 'Home':
-          return <Home/>; 
+      // case 'Home':
+      //     return <Home/>;
       default:
         return null;
     }
@@ -30,7 +30,13 @@ const App = () => {
     setSelectedOption(option);
   };
 
-  const dropdownOptions = ['SignIn', 'ViewLog', 'ReportIssue', 'Tutorial', 'Home'];
+  const dropdownOptions = [
+    "SignIn",
+    "ViewLog",
+    "ReportIssue",
+    "Tutorial",
+    "Home",
+  ];
 
   return (
     <div className="App">
@@ -39,10 +45,7 @@ const App = () => {
         <div className="dropdown-content">
           {dropdownOptions.map((option) => (
             <React.Fragment key={option}>
-              <a
-                href="#"
-                onClick={() => handleOptionSelect(option)}
-              >
+              <a href="#" onClick={() => handleOptionSelect(option)}>
                 {option}
               </a>
               <br /> {/* New line between options */}
@@ -50,9 +53,7 @@ const App = () => {
           ))}
         </div>
       </div>
-      <div className="component-container">
-        {renderComponent()}
-      </div>
+      <div className="component-container">{renderComponent()}</div>
     </div>
   );
 };
