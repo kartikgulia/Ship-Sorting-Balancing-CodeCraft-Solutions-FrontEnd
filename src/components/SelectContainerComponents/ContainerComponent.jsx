@@ -4,6 +4,12 @@ const ContainerComponent = ({ value, isSelected, onClick }) => {
   let style;
   let displayContent;
 
+  const handleClick = () => {
+    if (value !== "NAN" && value !== "UNUSED") {
+      onClick(); // Only trigger onClick if value is not "NAN" or "UNUSED"
+    }
+  };
+
   if (value === "NAN") {
     // Use a special style for "NAN" to fill the whole container
     style = { ...cellStyle, padding: 0 };
@@ -18,7 +24,7 @@ const ContainerComponent = ({ value, isSelected, onClick }) => {
   }
 
   return (
-    <div style={style} onClick={onClick}>
+    <div style={style} onClick={handleClick}>
       {displayContent}
     </div>
   );
