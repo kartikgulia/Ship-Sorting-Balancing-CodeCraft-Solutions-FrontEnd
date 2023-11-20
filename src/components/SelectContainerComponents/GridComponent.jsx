@@ -40,14 +40,23 @@ export default function GridComp({ onSelectedItemsChange }) {
       })
     );
     setSelectedItems(newState);
-    const selectedNames = gridData.flatMap((row, rIndex) =>
-      row
-        .filter((_, cIndex) => newState[rIndex][cIndex])
-        .map((item) => item.name)
-    );
 
-    // Call the callback function with the selected names
-    onSelectedItemsChange(selectedNames);
+    const selectedNames = [];
+    const positions = [];
+    gridData.forEach((row, rIndex) => {
+      row.forEach((item, cIndex) => {
+        if (newState[rIndex][cIndex]) {
+          selectedNames.push(item.name);
+          positions.push({
+            rowIndex: item.position[0],
+            colIndex: item.position[1],
+          });
+        }
+      });
+    });
+
+    // Call the callback function with the selected names and their positions
+    onSelectedItemsChange(selectedNames, positions);
   };
 
   return (

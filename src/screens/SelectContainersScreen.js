@@ -4,14 +4,17 @@ import EnterNameOfContainerComp from "../components/SelectContainerComponents/En
 
 const SelectContainerScreen = () => {
   const [selectedNames, setSelectedNames] = useState([]);
+  const [selectedPositions, setSelectedPositions] = useState([]); // New state for storing positions
 
-  const handleSelectedItems = (selectedItems) => {
+  const handleSelectedItems = (selectedItems, positions) => {
     setSelectedNames(selectedItems);
+    setSelectedPositions(positions); // Update positions state
   };
 
   useEffect(() => {
-    console.log(selectedNames); // Log out selected names whenever they change
-  }, [selectedNames]); // Dependency array includes selectedNames
+    console.log("Selected Names:", selectedNames);
+    console.log("Selected Positions:", selectedPositions);
+  }, [selectedNames, selectedPositions]);
   return (
     <div style={containerStyle}>
       <GridComp onSelectedItemsChange={handleSelectedItems} />
