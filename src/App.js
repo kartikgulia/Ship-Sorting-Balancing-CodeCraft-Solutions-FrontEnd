@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import "./App.css";
-import SignIn from "./signin";
-import ViewLog from "./viewlogs";
+import SignIn from "./screens/signin";
+import ViewLog from "./screens/viewlogs";
 import ReportIssue from "./report-issue";
-import Tutorial from "./tutorial";
+import Tutorial from "./screens/tutorial";
 // import Home from './home'
 
 const App = () => {
