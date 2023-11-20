@@ -15,9 +15,9 @@ export default function GridComp() {
       let data = await response.json();
 
       // Process and update gridData state
-      const processedGrid = data.grid.slice(1).map((row) => row.slice(1));
+      const processedGrid = data.grid;
       setGridData(processedGrid);
-
+      console.log(processedGrid);
       // Update selectedItems state based on the new gridData
       const newSelectedItems = processedGrid.map((row) => row.map(() => false));
       setSelectedItems(newSelectedItems);
