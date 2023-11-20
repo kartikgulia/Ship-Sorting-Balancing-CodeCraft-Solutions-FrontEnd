@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ContainerComponent from "./ContainerComponent";
 
-export default function GridComp() {
+export default function GridComp({ onSelectedItemsChange }) {
   // State for the dynamic grid data
   const [gridData, setGridData] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -40,6 +40,14 @@ export default function GridComp() {
       })
     );
     setSelectedItems(newState);
+    const selectedNames = gridData.flatMap((row, rIndex) =>
+      row
+        .filter((_, cIndex) => newState[rIndex][cIndex])
+        .map((item) => item.name)
+    );
+
+    // Call the callback function with the selected names
+    onSelectedItemsChange(selectedNames);
   };
 
   return (
