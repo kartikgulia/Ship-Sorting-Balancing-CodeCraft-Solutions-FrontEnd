@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const SignIn = () => {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
 
   const handleInputChange = (event) => {
     setUsername(event.target.value);
@@ -18,12 +18,8 @@ const SignIn = () => {
       <h2>Sign In Page</h2>
       <form>
         <label>
-          Enter your name: <br/>
-          <input
-            type="text"
-            value={username}
-            onChange={handleInputChange}
-          />
+          Enter your name: <br />
+          <input type="text" value={username} onChange={handleInputChange} />
         </label>
         <button type="button" onClick={handleProceed}>
           Proceed
