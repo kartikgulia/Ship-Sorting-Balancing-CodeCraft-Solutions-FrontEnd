@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+.button-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.dropbtn {
+  padding: 10px 20px; /* Adjust padding to increase button size */
+  font-size: 16px; /* Optional: Adjust font size if needed */
+}
