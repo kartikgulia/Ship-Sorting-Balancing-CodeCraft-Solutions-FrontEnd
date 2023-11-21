@@ -84,15 +84,3 @@ const gridStyle = {
   gap: "10px", // Optional: Space between grid items
   margin: "20px",
 };
-
-const cellStyle = {
-  border: "1px solid black",
-  padding: "10px",
-  cursor: "pointer",
-  textAlign: "center",
-};
-
-const selectedStyle = {
-  ...cellStyle,
-  backgroundColor: "green", // Green background for selected items
-};
