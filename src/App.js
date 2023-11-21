@@ -4,11 +4,12 @@ import SignIn from "./screens/signin";
 import ViewLog from "./screens/viewlogs";
 import ReportIssue from "./report-issue";
 import Tutorial from "./screens/tutorial";
-// import Home from './home'
+import Home from "./home";
 import SelectContainerScreen from "./screens/SelectContainersScreen";
 
 const App = () => {
   const [selectedOption, setSelectedOption] = useState(null);
+  const [dropdownVisible, setDropdownVisible] = useState(false); // State to track dropdown visibility
 
   const renderComponent = () => {
     switch (selectedOption) {
@@ -20,9 +21,9 @@ const App = () => {
         return <ReportIssue />;
       case "Tutorial":
         return <Tutorial />;
-      // case 'Home':
-      //     return <Home/>;
-      case "SelectContainer":
+      case "Home":
+        return <Home />;
+      case "SelectContainers":
         return <SelectContainerScreen />;
       default:
         return null;
@@ -31,6 +32,11 @@ const App = () => {
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
+    setDropdownVisible(false); // Close dropdown after selecting an option
+  };
+
+  const toggleDropdown = () => {
+    setDropdownVisible(!dropdownVisible); // Toggle dropdown visibility
   };
 
   const dropdownOptions = [
@@ -39,26 +45,35 @@ const App = () => {
     "ReportIssue",
     "Tutorial",
     "Home",
-    "SelectContainer",
+    "SelectContainers",
   ];
 
   return (
     <div className="App">
-      <div className="dropdown">
-        <button className="dropbtn">Select an Option</button>
-        <div className="dropdown-content">
-          {dropdownOptions.map((option) => (
-            <React.Fragment key={option}>
-              <a href="#" onClick={() => handleOptionSelect(option)}>
-                {option}
-              </a>
-              <br /> {/* New line between options */}
-            </React.Fragment>
-          ))}
+      {/* Create a container to position the button to the top right */}
+      <div className="button-container">
+        <div className="dropdown">
+          <button className="dropbtn" onClick={toggleDropdown}>
+            Settings
+          </button>
+          {/* Use conditional rendering to show/hide the dropdown content */}
+          {dropdownVisible && (
+            <div className="dropdown-content">
+              {dropdownOptions.map((option) => (
+                <React.Fragment key={option}>
+                  <a href="#" onClick={() => handleOptionSelect(option)}>
+                    {option}
+                  </a>
+                  <br /> {/* New line between options */}
+                </React.Fragment>
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <div className="component-container">{renderComponent()}</div>
     </div>
   );
 };
+
 export default App;
