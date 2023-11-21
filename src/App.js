@@ -23,6 +23,8 @@ const App = () => {
         return <Tutorial />;
       case "Home":
         return <Home />;
+      case "SelectContainers":
+        return <SelectContainerScreen />;
       default:
         return null;
     }
@@ -43,6 +45,7 @@ const App = () => {
     "ReportIssue",
     "Tutorial",
     "Home",
+    "SelectContainers",
   ];
 
   return (
