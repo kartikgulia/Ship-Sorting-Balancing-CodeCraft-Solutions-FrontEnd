@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import './App.css';
-import SignIn from './signin';
-import ViewLog from './viewlogs';
-import ReportIssue from './report-issue';
-import Tutorial from './tutorial';
-import Home from './home'
-
+import React, { useState } from "react";
+import "./App.css";
+import SignIn from "./screens/signin";
+import ViewLog from "./screens/viewlogs";
+import ReportIssue from "./report-issue";
+import Tutorial from "./screens/tutorial";
+import Home from "./home";
+import SelectContainerScreen from "./screens/SelectContainersScreen";
 
 const App = () => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -13,15 +13,15 @@ const App = () => {
 
   const renderComponent = () => {
     switch (selectedOption) {
-      case 'SignIn':
+      case "SignIn":
         return <SignIn />;
-      case 'ViewLog':
+      case "ViewLog":
         return <ViewLog />;
-      case 'ReportIssue':
+      case "ReportIssue":
         return <ReportIssue />;
-      case 'Tutorial':
+      case "Tutorial":
         return <Tutorial />;
-      case 'Home':
+      case "Home":
         return <Home />;
       default:
         return null;
@@ -37,7 +37,13 @@ const App = () => {
     setDropdownVisible(!dropdownVisible); // Toggle dropdown visibility
   };
 
-  const dropdownOptions = ['SignIn', 'ViewLog', 'ReportIssue', 'Tutorial', 'Home'];
+  const dropdownOptions = [
+    "SignIn",
+    "ViewLog",
+    "ReportIssue",
+    "Tutorial",
+    "Home",
+  ];
 
   return (
     <div className="App">
