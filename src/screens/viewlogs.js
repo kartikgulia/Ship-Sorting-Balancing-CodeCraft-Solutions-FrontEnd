@@ -13,7 +13,8 @@ import React, { useState } from 'react';
 
 const Viewlog = () => {
   const [password, setPassword] = useState('');
-  const [showImage, setShowImage] = useState(false);
+  const [showText, setShowText] = useState(false);
+  const [fileContent, setFileContent] = useState('');
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
@@ -21,18 +22,21 @@ const Viewlog = () => {
 
   const handlePasswordSubmit = () => {
     if (password === 'password123') {
-      setShowImage(true);
+      //text about for the textfile. Need to fetch it here. Backend gotta help
+      const textFileContent = 'This is the content of the text file.\nCustomizable it.';
+      
+      setFileContent(textFileContent);
+      setShowText(true);
     }
   };
 
-  const handleDownloadImage = () => {
-    // Replace the URL with the actual URL of the image you want to download
-    const imageUrl = 'https://media.istockphoto.com/id/537317925/photo/willow-log-isolated.jpg?s=612x612&w=0&k=20&c=9rLi7wqd-0AdLETxdg8OFUlbhI5ZhwFx66UxvxVwBBU=';
+  const handleDownloadTextFile = () => {
+    const blob = new Blob([fileContent], { type: 'text/plain' });
 
-    // Customize the download logic here ex: create a link and trigger a click event
+    // Creates link and click event to download the text file
     const downloadLink = document.createElement('a');
-    downloadLink.href = imageUrl;
-    downloadLink.download = 'downloaded-image.jpg';
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.download = 'downloaded-file.txt';
     downloadLink.click();
   };
 
@@ -48,14 +52,10 @@ const Viewlog = () => {
       </label>
       <button onClick={handlePasswordSubmit}>Submit</button>
 
-      {showImage && (
+      {showText && (
         <div>
-          <img
-            src="https://media.istockphoto.com/id/537317925/photo/willow-log-isolated.jpg?s=612x612&w=0&k=20&c=9rLi7wqd-0AdLETxdg8OFUlbhI5ZhwFx66UxvxVwBBU=" // Image URL
-            alt="Download Image"
-            style={{ maxWidth: '100%', marginTop: '20px' }}
-          />
-          <button onClick={handleDownloadImage}>Download Image</button>
+          <pre>{fileContent}</pre>
+          <button onClick={handleDownloadTextFile}>Download Text File</button>
         </div>
       )}
     </div>
