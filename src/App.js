@@ -6,6 +6,7 @@ import ReportIssue from "./report-issue";
 import Tutorial from "./screens/tutorial";
 import Home from "./home";
 import SelectContainerScreen from "./screens/SelectContainersScreen";
+import UploadScreen from "./UploadManifest";
 
 import { FaCog } from "react-icons/fa"; // This imports a gear icon from Font Awesome
 
@@ -27,6 +28,9 @@ const App = () => {
         return <Home />;
       case "SelectContainers":
         return <SelectContainerScreen />;
+      case "UploadManifest":
+        return <UploadScreen />;
+
       default:
         return null;
     }
@@ -48,6 +52,7 @@ const App = () => {
     "Tutorial",
     "Home",
     "SelectContainers",
+    "UploadManifest",
   ];
 
   return (
