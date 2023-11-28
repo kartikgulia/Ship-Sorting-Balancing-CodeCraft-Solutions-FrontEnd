@@ -45,5 +45,7 @@
 
 .dropbtn {
   padding: 10px 20px; /* Adjust padding to increase button size */
-  font-size: 16px; /* Optional: Adjust font size if needed */
+  font-size: 32px; /* Optional: Adjust font size if needed */
+  background-color: transparent; /* Make the background transparent */
+  border: none; /* Remove any border */
 }

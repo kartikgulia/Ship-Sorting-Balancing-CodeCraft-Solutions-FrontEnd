@@ -7,6 +7,8 @@ import Tutorial from "./screens/tutorial";
 import Home from "./home";
 import SelectContainerScreen from "./screens/SelectContainersScreen";
 
+import { FaCog } from "react-icons/fa"; // This imports a gear icon from Font Awesome
+
 const App = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState(false); // State to track dropdown visibility
@@ -54,7 +56,7 @@ const App = () => {
       <div className="button-container">
         <div className="dropdown">
           <button className="dropbtn" onClick={toggleDropdown}>
-            Settings
+            <FaCog />
           </button>
           {/* Use conditional rendering to show/hide the dropdown content */}
           {dropdownVisible && (
