@@ -1,43 +1,60 @@
-import React, { useState } from 'react';
-
-// const ViewLog = () => {
-//   return (
-//     <div>
-//       <h2>View Log Page</h2>
-//       <p>Hello, World!</p>
-//     </div>
-//   );
-// };
-
-// export default ViewLog;
+import React, { useState } from "react";
 
 const Viewlog = () => {
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const [showText, setShowText] = useState(false);
-  const [fileContent, setFileContent] = useState('');
+  const [fileContent, setFileContent] = useState("");
+  const [logContent, setLogContent] = useState("");
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
 
   const handlePasswordSubmit = () => {
-    if (password === 'password123') {
-      //text about for the textfile. Need to fetch it here. Backend gotta help
-      const textFileContent = 'This is the content of the text file.\nCustomizable it.';
-      
+    if (password === "password123") {
+      // Text about for the text file. Need to fetch it here. Backend gotta help
+      const textFileContent = "Download the log file";
+
       setFileContent(textFileContent);
       setShowText(true);
     }
   };
-
   const handleDownloadTextFile = () => {
-    const blob = new Blob([fileContent], { type: 'text/plain' });
+    // Fetch log file content
+    fetch("http://127.0.0.1:5000/downloadLog")
+      .then((response) => {
+        // Access the Content-Disposition header to get the filename
+        const contentDispositionHeader = response.headers.get(
+          "Content-Disposition"
+        );
 
-    // Creates link and click event to download the text file
-    const downloadLink = document.createElement('a');
-    downloadLink.href = URL.createObjectURL(blob);
-    downloadLink.download = 'downloaded-file.txt';
-    downloadLink.click();
+        let filename = "Keogh2023.txt"; // Default filename
+        if (contentDispositionHeader) {
+          const matches = contentDispositionHeader.match(/filename="(.+)"/);
+          if (matches && matches.length > 1) {
+            filename = matches[1]; // Extract the filename
+            console.log(filename);
+          }
+        }
+
+        console.log("Filename:", filename);
+
+        return response.blob().then((blob) => ({
+          blob,
+          filename,
+        }));
+      })
+      .then(({ blob, filename }) => {
+        const downloadLink = document.createElement("a");
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = filename; // Use the extracted filename
+        document.body.appendChild(downloadLink); // Append to body
+        downloadLink.click();
+        document.body.removeChild(downloadLink); // Clean up
+      })
+      .catch((error) => {
+        console.error("Error fetching log file:", error);
+      });
   };
 
   return (
@@ -56,6 +73,13 @@ const Viewlog = () => {
         <div>
           <pre>{fileContent}</pre>
           <button onClick={handleDownloadTextFile}>Download Text File</button>
+        </div>
+      )}
+
+      {logContent && (
+        <div>
+          <h2>Log Content:</h2>
+          <pre>{logContent}</pre>
         </div>
       )}
     </div>
