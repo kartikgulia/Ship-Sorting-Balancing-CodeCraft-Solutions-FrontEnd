@@ -42,13 +42,16 @@ function OperationListScreen({ isBalance }) {
     // Handle what happens when the user clicks the "done" button for the final move
     // You can add your logic here.
     console.log("User clicked 'Done' for the final move.");
+
+    // Increment current index so that you can see the final manifest
+    setCurrentIndex(moves.length);
   };
 
   const currentMove = moves.length > 0 ? moves[currentIndex] : null;
 
   return (
     <div style={containerStyle}>
-      <GridComp currentMove={currentMove} />
+      <GridComp currentMove={currentMove} moveNum={currentIndex} />
 
       <button onClick={handleButtonClick}>Get Balance</button>
       <div>
