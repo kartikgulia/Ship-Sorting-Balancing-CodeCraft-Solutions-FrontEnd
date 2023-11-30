@@ -1,13 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import ContainerComponent from "../SelectContainerComponents/ContainerComponent";
 
-export default function GridComp({ currentMove }) {
+export default function GridComp({ currentMove, moveNum }) {
   // State for the dynamic grid data
   const [gridData, setGridData] = useState([]);
 
-  const fetchGridInfo = async () => {
+  const fetchUpdatedManifestForMove = useCallback(async () => {
     try {
-      const response = await fetch("http://127.0.0.1:5000/getGridInfo");
+      const response = await fetch(
+        "http://127.0.0.1:5000/updateManifestForCurrentMove",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ moveNum }), // Assuming currentMove is the data expected by the server
+        }
+      );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -16,15 +25,14 @@ export default function GridComp({ currentMove }) {
       // Process and update gridData state
       const processedGrid = data.grid;
       setGridData(processedGrid);
-      //   console.log(processedGrid);
     } catch (error) {
-      console.error("Error fetching grid info:", error);
+      console.error("Error fetching updated manifest:", error);
     }
-  };
+  }, [moveNum]); // Dependency for useCallback
 
   useEffect(() => {
-    fetchGridInfo();
-  }, []);
+    fetchUpdatedManifestForMove();
+  }, [fetchUpdatedManifestForMove]); // Dependency for useEffect
 
   return (
     <div style={gridStyle}>
