@@ -18,16 +18,17 @@ function OperationListScreen({ isBalance }) {
     fetch("http://127.0.0.1:5000/balance")
       .then((response) => {
         if (response.ok) {
+          // console.log(response);
           return response.json();
         }
         throw new Error("Network response was not ok.");
       })
       .then((data) => {
-        console.log("Balance data:", data);
+        // console.log("Balance data:", data);
         setMoves(data.listOfMoves);
         setCurrentIndex(0);
         setIsDone(false);
-        if (currentIndex >= moves.length - 2) {
+        if (currentIndex === moves.length - 2) {
           setIsDone(true);
         }
       })
@@ -39,7 +40,7 @@ function OperationListScreen({ isBalance }) {
   const goToNextMove = () => {
     setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length - 1));
     // Check if the next move is the last move to enable the "done" button
-    if (currentIndex >= moves.length - 2) {
+    if (currentIndex === moves.length - 2) {
       setIsDone(true);
     }
   };
@@ -50,32 +51,54 @@ function OperationListScreen({ isBalance }) {
   };
 
   const handleDoneClick = () => {
-    console.log("User clicked 'Done' for the final move.");
+    // console.log("User clicked 'Done' for the final move.");
     setCurrentIndex(moves.length);
     setShowDowloadManifestButton(true); // Enable the new button
   };
 
   const handleDowloadManifestButtonClick = () => {
-    fetch("http://127.0.0.1:5000/downloadUpdatedManifest")
+    console.log("Requesting outbound manifest name");
+    fetch("http://127.0.0.1:5000/getOutboundName")
       .then((response) => {
         if (response.ok) {
-          return response.blob();
+          return response.json();
         }
-        throw new Error("Network response was not ok.");
+        throw new Error(
+          "Network response was not ok for getting manifest name."
+        );
       })
-      .then((blob) => {
-        // Create a new URL for the blob
-        const url = window.URL.createObjectURL(new Blob([blob]));
-        const link = document.createElement("a");
-        link.href = url;
+      .then((data) => {
+        const fileName = data.fileName; // Extract the filename from the response
+        console.log("Downloading:", fileName);
 
-        document.body.appendChild(link);
-        link.click();
-        link.parentNode.removeChild(link);
-        window.URL.revokeObjectURL(url);
+        fetch("http://127.0.0.1:5000/downloadUpdatedManifest")
+          .then((response) => {
+            if (response.ok) {
+              return response.blob();
+            }
+            throw new Error(
+              "Network response was not ok for downloading manifest."
+            );
+          })
+          .then((blob) => {
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = fileName; // Set the filename from the /getOutboundName response
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+            window.URL.revokeObjectURL(url);
+          })
+          .catch((error) => {
+            console.error(
+              "There was a problem with the fetch operation:",
+              error
+            );
+          });
       })
       .catch((error) => {
-        console.error("There was a problem with the fetch operation:", error);
+        console.error("There was a problem getting the manifest name:", error);
       });
   };
 
@@ -96,7 +119,7 @@ function OperationListScreen({ isBalance }) {
             </button>
             <button
               onClick={goToNextMove}
-              disabled={currentIndex >= moves.length - 1}
+              disabled={currentIndex === moves.length - 1}
             >
               Next
             </button>
