@@ -24,10 +24,10 @@ function OperationListScreen({ isBalance }) {
         throw new Error("Network response was not ok.");
       })
       .then((data) => {
-        // console.log("Balance data:", data);
         setMoves(data.listOfMoves);
         setCurrentIndex(0);
-        setIsDone(false);
+        // Adjust the setIsDone logic to account for a single move
+        setIsDone(data.listOfMoves.length <= 1);
         if (currentIndex === moves.length - 2) {
           setIsDone(true);
         }
@@ -39,8 +39,8 @@ function OperationListScreen({ isBalance }) {
 
   const goToNextMove = () => {
     setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length - 1));
-    // Check if the next move is the last move to enable the "done" button
-    if (currentIndex === moves.length - 2) {
+    // Adjust the setIsDone logic here as well
+    if (currentIndex === moves.length - 2 || moves.length === 1) {
       setIsDone(true);
     }
   };
@@ -54,6 +54,7 @@ function OperationListScreen({ isBalance }) {
     // console.log("User clicked 'Done' for the final move.");
     setCurrentIndex(moves.length);
     setShowDowloadManifestButton(true); // Enable the new button
+    setIsDone(true);
   };
 
   const handleDowloadManifestButtonClick = () => {
@@ -114,15 +115,22 @@ function OperationListScreen({ isBalance }) {
             <div>
               Move {currentIndex + 1} of {moves.length}
             </div>
-            <button onClick={goToPreviousMove} disabled={currentIndex === 0}>
-              Previous
-            </button>
-            <button
-              onClick={goToNextMove}
-              disabled={currentIndex === moves.length - 1}
-            >
-              Next
-            </button>
+            {!isDone && ( // Conditional rendering based on isDone
+              <>
+                <button
+                  onClick={goToPreviousMove}
+                  disabled={currentIndex === 0}
+                >
+                  Previous
+                </button>
+                <button
+                  onClick={goToNextMove}
+                  disabled={currentIndex === moves.length - 1}
+                >
+                  Next
+                </button>
+              </>
+            )}
             {isDone && <button onClick={handleDoneClick}>Done</button>}
           </>
         )}
