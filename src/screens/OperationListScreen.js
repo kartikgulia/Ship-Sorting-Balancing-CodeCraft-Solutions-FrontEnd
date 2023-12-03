@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import GridComp from "../components/OperationAnimationComponents/GridComponent";
+// Import a loading spinner component (you can use any spinner of your choice)
+import Spinner from "../components/OperationAnimationComponents/Spinner";
 
 function OperationListScreen({ isBalance }) {
   const [moves, setMoves] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDone, setIsDone] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // New state for loading status
   const [showDowloadManifestButton, setShowDowloadManifestButton] =
     useState(false);
 
@@ -12,13 +15,13 @@ function OperationListScreen({ isBalance }) {
     if (isBalance) {
       fetchBalanceData();
     }
-  }, [isBalance]); // This effect runs only when isBalance changes
+  }, [isBalance]);
 
   const fetchBalanceData = () => {
+    setIsLoading(true); // Set loading to true when the fetch starts
     fetch("http://127.0.0.1:5000/balance")
       .then((response) => {
         if (response.ok) {
-          // console.log(response);
           return response.json();
         }
         throw new Error("Network response was not ok.");
@@ -26,7 +29,6 @@ function OperationListScreen({ isBalance }) {
       .then((data) => {
         setMoves(data.listOfMoves);
         setCurrentIndex(0);
-        // Adjust the setIsDone logic to account for a single move
         setIsDone(data.listOfMoves.length <= 1);
         if (currentIndex === moves.length - 2) {
           setIsDone(true);
@@ -34,6 +36,9 @@ function OperationListScreen({ isBalance }) {
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
+      })
+      .finally(() => {
+        setIsLoading(false); // Set loading to false when the fetch completes
       });
   };
 
@@ -107,40 +112,46 @@ function OperationListScreen({ isBalance }) {
 
   return (
     <div style={containerStyle}>
-      <GridComp currentMove={currentMove} moveNum={currentIndex} />
+      {isLoading && <Spinner />}
 
-      <div>
-        {moves.length > 0 && (
-          <>
-            <div>
-              Move {currentIndex + 1} of {moves.length}
-            </div>
-            {!isDone && ( // Conditional rendering based on isDone
+      {!isLoading && (
+        <div>
+          <GridComp currentMove={currentMove} moveNum={currentIndex} />
+
+          <div>
+            {moves.length > 0 && (
               <>
-                <button
-                  onClick={goToPreviousMove}
-                  disabled={currentIndex === 0}
-                >
-                  Previous
-                </button>
-                <button
-                  onClick={goToNextMove}
-                  disabled={currentIndex === moves.length - 1}
-                >
-                  Next
-                </button>
+                <div>
+                  Move {currentIndex + 1} of {moves.length}
+                </div>
+                {!isDone && ( // Conditional rendering based on isDone
+                  <>
+                    <button
+                      onClick={goToPreviousMove}
+                      disabled={currentIndex === 0}
+                    >
+                      Previous
+                    </button>
+                    <button
+                      onClick={goToNextMove}
+                      disabled={currentIndex === moves.length - 1}
+                    >
+                      Next
+                    </button>
+                  </>
+                )}
+                {isDone && <button onClick={handleDoneClick}>Done</button>}
               </>
             )}
-            {isDone && <button onClick={handleDoneClick}>Done</button>}
-          </>
-        )}
 
-        {showDowloadManifestButton && (
-          <button onClick={handleDowloadManifestButtonClick}>
-            Download updated manifest
-          </button>
-        )}
-      </div>
+            {showDowloadManifestButton && (
+              <button onClick={handleDowloadManifestButtonClick}>
+                Download updated manifest
+              </button>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
