@@ -72,8 +72,40 @@ function OperationListScreen({ isBalance }) {
       });
   };
 
+  const propagateWeights = () => {
+    if (currentIndex < moves.length - 1) {
+      const currentMoveFrom = moves[currentIndex][0];
+      const currentMoveTo = moves[currentIndex][1];
+      const nextMoveNum = currentIndex + 1;
+
+      const url = "http://127.0.0.1:5000/propagateWeights";
+      const data = {
+        fromRow: currentMoveFrom[0],
+        fromCol: currentMoveFrom[1],
+        toRow: currentMoveTo[0],
+        toCol: currentMoveTo[1],
+        moveNum: nextMoveNum,
+      };
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Success:", data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  };
   const goToNextMove = () => {
     setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length - 1));
+    propagateWeights();
     // Adjust the setIsDone logic here as well
     if (currentIndex === moves.length - 2 || moves.length === 1) {
       setIsDone(true);
