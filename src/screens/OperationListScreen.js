@@ -11,15 +11,45 @@ function OperationListScreen({ isBalance }) {
   const [showDowloadManifestButton, setShowDowloadManifestButton] =
     useState(false);
 
+  const [showWeightInput, setShowWeightInput] = useState(false); // State to control the display of the weight input
+  const [weight, setWeight] = useState(""); // State to hold the entered weight
+
   useEffect(() => {
     if (isBalance) {
       fetchBalanceData();
+    } else {
+      fetchTransferData();
     }
   }, [isBalance]);
 
   const fetchBalanceData = () => {
     setIsLoading(true); // Set loading to true when the fetch starts
     fetch("http://127.0.0.1:5000/balance")
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then((data) => {
+        setMoves(data.listOfMoves);
+        setCurrentIndex(0);
+        setIsDone(data.listOfMoves.length <= 1);
+        if (currentIndex === moves.length - 2) {
+          setIsDone(true);
+        }
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      })
+      .finally(() => {
+        setIsLoading(false); // Set loading to false when the fetch completes
+      });
+  };
+
+  const fetchTransferData = () => {
+    setIsLoading(true); // Set loading to true when the fetch starts
+    fetch("http://127.0.0.1:5000/transfer")
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -57,7 +87,7 @@ function OperationListScreen({ isBalance }) {
 
   const handleDoneClick = () => {
     // console.log("User clicked 'Done' for the final move.");
-    setCurrentIndex(moves.length);
+    setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length - 1));
     setShowDowloadManifestButton(true); // Enable the new button
     setIsDone(true);
   };
@@ -110,6 +140,58 @@ function OperationListScreen({ isBalance }) {
 
   const currentMove = moves.length > 0 ? moves[currentIndex] : null;
 
+  useEffect(() => {
+    console.log("Current Move:", currentMove);
+  }, [currentMove]);
+
+  const checkCurrentMove = (move) => {
+    if (
+      move &&
+      move[0] &&
+      Array.isArray(move[0]) &&
+      move[0][0] === 0 &&
+      move[0][1] === 0
+    ) {
+      console.log("coming from truck");
+      setShowWeightInput(true); // Show the weight input
+    } else {
+      setShowWeightInput(false); // Hide the weight input
+    }
+  };
+
+  const handleWeightChange = (event) => {
+    setWeight(event.target.value); // Update the weight state when the input changes
+  };
+
+  const submitWeight = () => {
+    const url = "http://127.0.0.1:5000/updateWeight";
+    const data = {
+      weight: weight,
+      row: currentMove[1][0],
+      column: currentMove[1][1],
+      moveNum: currentIndex,
+    }; // Construct data object with the weight
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data), // Convert the JavaScript object to a JSON string
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  useEffect(() => {
+    checkCurrentMove(currentMove); // Call the function within useEffect
+  }, [currentMove]); // Dependency array ensures this runs whenever currentMove changes
+
   return (
     <div style={containerStyle}>
       {isLoading && <Spinner />}
@@ -118,20 +200,36 @@ function OperationListScreen({ isBalance }) {
         <div>
           <GridComp currentMove={currentMove} moveNum={currentIndex} />
 
-          <div>
+          {/* Conditionally render the weight input and submit button */}
+          {showWeightInput && (
+            <div style={{ marginTop: "20px" }}>
+              <label>Enter weight: </label>
+              <input
+                type="text"
+                value={weight}
+                onChange={handleWeightChange}
+                style={{ marginLeft: "10px" }}
+              />
+              <button onClick={submitWeight} style={{ marginLeft: "10px" }}>
+                Submit
+              </button>
+            </div>
+          )}
+
+          <div style={{ marginTop: "20px" }}>
             {moves.length > 0 && (
               <>
                 <div>
                   Move {currentIndex + 1} of {moves.length}
                 </div>
-                {!isDone && ( // Conditional rendering based on isDone
+                {!isDone && (
                   <>
-                    <button
+                    {/* <button
                       onClick={goToPreviousMove}
                       disabled={currentIndex === 0}
                     >
                       Previous
-                    </button>
+                    </button> */}
                     <button
                       onClick={goToNextMove}
                       disabled={currentIndex === moves.length - 1}
