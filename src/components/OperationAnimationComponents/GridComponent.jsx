@@ -33,7 +33,18 @@ export default function GridComp({ currentMove, moveNum }) {
   useEffect(() => {
     fetchUpdatedManifestForMove();
   }, [fetchUpdatedManifestForMove]); // Dependency for useEffect
+  const formatMoveDisplay = (move) => {
+    let start =
+      move[0][0] === 0 && move[0][1] === 0
+        ? "Truck"
+        : `[${move[0].join(", ")}]`;
 
+    let end =
+      move[1][0] === 0 && move[1][1] === 0
+        ? "Truck"
+        : `[${move[1].join(", ")}]`;
+    return `Current Move: From ${start} to ${end}`;
+  };
   return (
     <div style={gridStyle}>
       {gridData.map((row, rowIndex) => (
@@ -61,12 +72,7 @@ export default function GridComp({ currentMove, moveNum }) {
         </React.Fragment>
       ))}
 
-      {currentMove && (
-        <div>
-          Current Move: From [{currentMove[0].join(", ")}] to [
-          {currentMove[1].join(", ")}]
-        </div>
-      )}
+      {currentMove && <div>{formatMoveDisplay(currentMove)}</div>}
     </div>
   );
 }
