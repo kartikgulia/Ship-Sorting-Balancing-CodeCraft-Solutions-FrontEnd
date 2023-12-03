@@ -1,6 +1,6 @@
 import React from "react";
 
-function UploadScreen() {
+const UploadScreen = () =>  {
   return (
     <div>
       <h1>Upload a Text File</h1>
@@ -17,5 +17,6 @@ function UploadScreen() {
     </div>
   );
 }
+
 
 export default UploadScreen;
