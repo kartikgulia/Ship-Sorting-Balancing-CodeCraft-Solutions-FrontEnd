@@ -73,7 +73,7 @@ function OperationListScreen({ isBalance }) {
   };
 
   const propagateWeights = () => {
-    if (currentIndex < moves.length - 1) {
+    if (currentIndex < moves.length) {
       const currentMoveFrom = moves[currentIndex][0];
       const currentMoveTo = moves[currentIndex][1];
       const nextMoveNum = currentIndex + 1;
@@ -85,6 +85,7 @@ function OperationListScreen({ isBalance }) {
         toRow: currentMoveTo[0],
         toCol: currentMoveTo[1],
         moveNum: nextMoveNum,
+        totalNumMoves: moves.length,
       };
 
       fetch(url, {
@@ -120,6 +121,7 @@ function OperationListScreen({ isBalance }) {
   const handleDoneClick = () => {
     // console.log("User clicked 'Done' for the final move.");
     setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length - 1));
+    propagateWeights();
     setShowDowloadManifestButton(true); // Enable the new button
     setIsDone(true);
   };
