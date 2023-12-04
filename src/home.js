@@ -1,7 +1,14 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 const Home = () => {
+
+  const navigate = useNavigate();
+
   const handleTransfer = () => {
     // Add functionality for the Transfer button
     console.log('Transfer button clicked');
+    navigate('/UploadManifest');
     // Add logic for transfer functionality if required
   };
 

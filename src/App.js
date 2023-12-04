@@ -9,6 +9,7 @@ import SelectContainerScreen from "./screens/SelectContainersScreen";
 import UploadScreen from "./UploadManifest";
 import OperationListScreen from "./screens/OperationListScreen";
 import { FaCog } from "react-icons/fa"; // This imports a gear icon from Font Awesome
+import { Route, Routes } from 'react-router-dom';
 
 const App = () => {
   const [selectedOption, setSelectedOption] = useState(null);
@@ -60,6 +61,10 @@ const App = () => {
 
   return (
     <div className="App">
+    <Routes>
+      <Route path="/UploadScreen" component={UploadScreen} />
+      <Route path="/" component={Home} />
+    </Routes>
       {/* Create a container to position the button to the top right */}
       <div className="button-container">
         <div className="dropdown">
