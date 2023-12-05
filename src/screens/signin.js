@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import UploadScreen from "./UploadManifest";
+import Home from "./home";
 
 
 
 const SignIn = () => {
-
-  const [username, setUsername] = useState("");
   const [showUploadScreen, setShowUploadScreen] = useState(false);
+  const [username, setUsername] = useState("");
+  
 
   const handleInputChange = (event) => {
     setUsername(event.target.value);
@@ -33,32 +33,42 @@ const SignIn = () => {
       .then((responseData) => {
         console.log("Response Data:", responseData);
         // After receiving response, conditionally show UploadScreen based on some condition
-        if (responseData.someCondition) {
-          setShowUploadScreen(true); // Set showUploadScreen to true if condition met
-        } else {
-          setShowUploadScreen(false); // Set showUploadScreen to false if condition not met
-        }
+        // if (responseData.someCondition) {
+        //   setShowUploadScreen(true); // Set showUploadScreen to true if condition met
+        // } else {
+        //   setShowUploadScreen(false); // Set showUploadScreen to false if condition not met
+        // }
       })
       .catch((error) => {
         console.error("Fetch Error:", error);
       });
+
+      setShowUploadScreen(true);
+
+
   };
 
   return (
     <div>
-      <h2>Sign In Page</h2>
-      <form>
-        <label>
-          Enter your name: <br />
-          <input type="text" value={username} onChange={handleInputChange} />
-        </label>
-        <button type="button" onClick={handleProceed}>
-          Proceed
-        </button>
-      </form>
-      {/* Conditional rendering of UploadScreen based on showUploadScreen state */}
-      {showUploadScreen ? <UploadScreen /> : null}
-    </div>
+      {showUploadScreen ? (
+        <Home />
+      ) : (
+        <div>
+            <h2>Sign In Page</h2>
+            <form>
+              <label>
+                Enter your name: <br />
+                <input type="text" value={username} onChange={handleInputChange} />
+              </label>
+              <button type="button" onClick={handleProceed}>
+                Proceed
+              </button>
+            </form>
+            {/* Conditional rendering of UploadScreen based on showUploadScreen state */}
+            {/* {showUploadScreen ? <Home /> : null} */}
+          </div>
+      )}
+    </div> 
   );
 };
 

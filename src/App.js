@@ -4,7 +4,7 @@ import SignIn from "./screens/signin";
 import ViewLog from "./screens/viewlogs";
 import ReportIssue from "./report-issue";
 import Tutorial from "./screens/tutorial";
-import Home from "./home";
+import Home from "./screens/home";
 import SelectContainerScreen from "./screens/SelectContainersScreen";
 import UploadScreen from "./screens/UploadManifest";
 import OperationListScreen from "./screens/OperationListScreen";
