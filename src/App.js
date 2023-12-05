@@ -30,11 +30,10 @@ const App = () => {
         return <SelectContainerScreen />;
       case "UploadManifest":
         return <UploadScreen />;
-
       case "OperationList":
         return <OperationListScreen isBalance={0} />;
       default:
-        return null;
+        return <UploadScreen/>;
     }
   };
 
