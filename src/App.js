@@ -6,7 +6,7 @@ import ReportIssue from "./report-issue";
 import Tutorial from "./screens/tutorial";
 import Home from "./home";
 import SelectContainerScreen from "./screens/SelectContainersScreen";
-import UploadScreen from "./UploadManifest";
+import UploadScreen from "./screens/UploadManifest";
 import OperationListScreen from "./screens/OperationListScreen";
 import { FaCog } from "react-icons/fa"; // This imports a gear icon from Font Awesome
 import { Route, Routes } from "react-router-dom";
@@ -35,7 +35,7 @@ const App = () => {
       case "OperationList":
         return <OperationListScreen isBalance={0} />;
       default:
-        return null;
+        return <Home />;
     }
   };
 

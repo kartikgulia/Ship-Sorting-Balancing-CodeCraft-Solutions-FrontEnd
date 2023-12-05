@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import UploadScreen from "./UploadManifest"; // Import the UploadScreen component
+import UploadScreen from "./screens/UploadManifest"; // Import the UploadScreen component
 
 const Home = () => {
   const [showUploadScreen, setShowUploadScreen] = useState(false);

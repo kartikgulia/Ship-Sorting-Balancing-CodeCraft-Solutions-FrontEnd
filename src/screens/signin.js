@@ -1,19 +1,22 @@
 import React, { useState } from "react";
+import UploadScreen from "./UploadManifest";
+
+
 
 const SignIn = () => {
+
   const [username, setUsername] = useState("");
+  const [showUploadScreen, setShowUploadScreen] = useState(false);
 
   const handleInputChange = (event) => {
     setUsername(event.target.value);
   };
 
   const handleProceed = () => {
-    // Create a data object with the desired structure
     const data = {
       currentUser: username,
     };
 
-    // Send a POST request using the fetch API
     fetch("http://127.0.0.1:5000/signin", {
       method: "POST",
       headers: {
@@ -25,11 +28,16 @@ const SignIn = () => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-
         return response.json();
       })
       .then((responseData) => {
         console.log("Response Data:", responseData);
+        // After receiving response, conditionally show UploadScreen based on some condition
+        if (responseData.someCondition) {
+          setShowUploadScreen(true); // Set showUploadScreen to true if condition met
+        } else {
+          setShowUploadScreen(false); // Set showUploadScreen to false if condition not met
+        }
       })
       .catch((error) => {
         console.error("Fetch Error:", error);
@@ -48,6 +56,8 @@ const SignIn = () => {
           Proceed
         </button>
       </form>
+      {/* Conditional rendering of UploadScreen based on showUploadScreen state */}
+      {showUploadScreen ? <UploadScreen /> : null}
     </div>
   );
 };
