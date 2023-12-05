@@ -120,7 +120,8 @@ function OperationListScreen({ isBalance }) {
 
   const handleDoneClick = () => {
     // console.log("User clicked 'Done' for the final move.");
-    setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length - 1));
+
+    setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length));
     propagateWeights();
     setShowDowloadManifestButton(true); // Enable the new button
     setIsDone(true);
