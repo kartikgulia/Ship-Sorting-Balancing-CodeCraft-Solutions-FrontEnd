@@ -22,6 +22,25 @@ function OperationListScreen({ isBalance }) {
     }
   }, [isBalance]);
 
+  const resetFilesForNewShip = () => {
+    fetch("http://127.0.0.1:5000/resetFilesForNewShip", {
+      method: "GET",
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then((data) => {
+        console.log("Success:", data);
+        alert("Please Remember to Email the Manifest to the captain");
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
   const fetchBalanceData = () => {
     setIsLoading(true); // Set loading to true when the fetch starts
     fetch("http://127.0.0.1:5000/balance")
@@ -278,9 +297,14 @@ function OperationListScreen({ isBalance }) {
             )}
 
             {showDowloadManifestButton && (
-              <button onClick={handleDowloadManifestButtonClick}>
-                Download updated manifest
-              </button>
+              <div>
+                <button onClick={handleDowloadManifestButtonClick}>
+                  Download updated manifest
+                </button>
+                <button onClick={resetFilesForNewShip}>
+                  Reset Files for New Ship
+                </button>
+              </div>
             )}
           </div>
         </div>
