@@ -4,30 +4,29 @@ import UploadScreen from "./UploadManifest"; // Import the UploadScreen componen
 
 const Home = () => {
   const [showUploadScreen, setShowUploadScreen] = useState(false);
+  const [isBalance, setIsBalance] = useState(false);
 
   const handleTransfer = () => {
-    // Add logic for transferring
+    // Logic for transferring
     console.log("Transfer button clicked");
-    // Example: Trigger a transfer function or API call
-
-    // Show the UploadScreen component
-    setShowUploadScreen(true);
+    setIsBalance(false); // Set isBalance to false
+    setShowUploadScreen(true); // Show the UploadScreen component
   };
 
   const handleCheckBalance = () => {
-    // Add logic for checking balance
+    // Logic for checking balance
     console.log("Balance button clicked");
-    // Example: Fetch balance information
-
-    // Show the UploadScreen component
-    setShowUploadScreen(true);
+    setIsBalance(true); // Set isBalance to true
+    setShowUploadScreen(true); // Show the UploadScreen component
   };
 
   return (
     <div className="home-container">
       {showUploadScreen ? (
-        <UploadScreen />
+        // Render UploadScreen with isBalance based on the state
+        <UploadScreen isBalance={isBalance ? 1 : 0} />
       ) : (
+        // Render buttons when showUploadScreen is false
         <div>
           <h2>Home</h2>
           <div className="button-row">

@@ -1,7 +1,8 @@
 import SelectContainerScreen from "./SelectContainersScreen";
+import OperationListScreen from "./OperationListScreen";
 import React, { useState } from "react";
 
-const UploadScreen = () => {
+const UploadScreen = ({ isBalance }) => {
   const [uploaded, setUploaded] = useState(false);
 
   const handleUpload = async (event) => {
@@ -38,7 +39,11 @@ const UploadScreen = () => {
   return (
     <div>
       {uploaded ? (
-        <SelectContainerScreen />
+        isBalance === 0 ? (
+          <SelectContainerScreen />
+        ) : (
+          <OperationListScreen isBalance={1} />
+        )
       ) : (
         <div>
           <h1>Upload a Text File</h1>

@@ -7,9 +7,11 @@ import YourSelectedContainers from "../components/SelectContainerComponents/Your
 // Bottom Half
 import EnterNameOfContainerComponent from "../components/SelectContainerComponents/EnterNameOfContainerComponent";
 
+import OperationListScreen from "./OperationListScreen";
 const SelectContainerScreen = () => {
   const [selectedNames, setSelectedNames] = useState([]);
   const [selectedPositions, setSelectedPositions] = useState([]); // New state for storing positions
+  const [isRequestSuccessful, setIsRequestSuccessful] = useState(false);
 
   const handleSelectedItems = (selectedItems, positions) => {
     setSelectedNames(selectedItems);
@@ -45,7 +47,7 @@ const SelectContainerScreen = () => {
       if (response.ok) {
         const jsonResponse = await response.json();
         console.log("Response:", jsonResponse);
-        // Handle success response
+        setIsRequestSuccessful(true); // Update state on successful response
       } else {
         // Handle non-success response
         console.error("Request failed:", response.status, response.statusText);
@@ -55,6 +57,10 @@ const SelectContainerScreen = () => {
     }
   };
 
+  if (isRequestSuccessful) {
+    // Render OperationListScreen instead of SelectContainerScreen
+    return <OperationListScreen isBalance={0} />;
+  }
   return (
     <div>
       <div style={containerStyle}>

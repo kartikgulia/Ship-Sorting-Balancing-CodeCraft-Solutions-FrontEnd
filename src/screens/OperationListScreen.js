@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from "react";
 import GridComp from "../components/OperationAnimationComponents/GridComponent";
-// Import a loading spinner component (you can use any spinner of your choice)
 import Spinner from "../components/OperationAnimationComponents/Spinner";
 
 function OperationListScreen({ isBalance }) {
   const [moves, setMoves] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDone, setIsDone] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // New state for loading status
+  const [isLoading, setIsLoading] = useState(false);
   const [showDowloadManifestButton, setShowDowloadManifestButton] =
     useState(false);
-
-  const [showWeightInput, setShowWeightInput] = useState(false); // State to control the display of the weight input
-  const [weight, setWeight] = useState(""); // State to hold the entered weight
+  const [showWeightInput, setShowWeightInput] = useState(false);
+  const [weight, setWeight] = useState("");
 
   useEffect(() => {
-    if (isBalance) {
+    if (isBalance === 1) {
       fetchBalanceData();
     } else {
       fetchTransferData();
@@ -42,7 +40,7 @@ function OperationListScreen({ isBalance }) {
   };
 
   const fetchBalanceData = () => {
-    setIsLoading(true); // Set loading to true when the fetch starts
+    setIsLoading(true);
     fetch("http://127.0.0.1:5000/balance")
       .then((response) => {
         if (response.ok) {
@@ -53,21 +51,18 @@ function OperationListScreen({ isBalance }) {
       .then((data) => {
         setMoves(data.listOfMoves);
         setCurrentIndex(0);
-        setIsDone(data.listOfMoves.length <= 1);
-        if (currentIndex === moves.length - 2) {
-          setIsDone(true);
-        }
+        setIsDone(data.listOfMoves.length === 0);
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
       })
       .finally(() => {
-        setIsLoading(false); // Set loading to false when the fetch completes
+        setIsLoading(false);
       });
   };
 
   const fetchTransferData = () => {
-    setIsLoading(true); // Set loading to true when the fetch starts
+    setIsLoading(true);
     fetch("http://127.0.0.1:5000/transfer")
       .then((response) => {
         if (response.ok) {
@@ -78,16 +73,13 @@ function OperationListScreen({ isBalance }) {
       .then((data) => {
         setMoves(data.listOfMoves);
         setCurrentIndex(0);
-        setIsDone(data.listOfMoves.length <= 1);
-        if (currentIndex === moves.length - 2) {
-          setIsDone(true);
-        }
+        setIsDone(data.listOfMoves.length === 0);
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
       })
       .finally(() => {
-        setIsLoading(false); // Set loading to false when the fetch completes
+        setIsLoading(false);
       });
   };
 
@@ -123,10 +115,10 @@ function OperationListScreen({ isBalance }) {
         });
     }
   };
+
   const goToNextMove = () => {
     setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length - 1));
     propagateWeights();
-    // Adjust the setIsDone logic here as well
     if (currentIndex === moves.length - 2 || moves.length === 1) {
       setIsDone(true);
     }
@@ -134,15 +126,13 @@ function OperationListScreen({ isBalance }) {
 
   const goToPreviousMove = () => {
     setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
-    setIsDone(false); // Disable "done" button when navigating to a previous move
+    setIsDone(false);
   };
 
   const handleDoneClick = () => {
-    // console.log("User clicked 'Done' for the final move.");
-
     setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length));
     propagateWeights();
-    setShowDowloadManifestButton(true); // Enable the new button
+    setShowDowloadManifestButton(true);
     setIsDone(true);
   };
 
@@ -158,7 +148,7 @@ function OperationListScreen({ isBalance }) {
         );
       })
       .then((data) => {
-        const fileName = data.fileName; // Extract the filename from the response
+        const fileName = data.fileName;
         console.log("Downloading:", fileName);
 
         fetch("http://127.0.0.1:5000/downloadUpdatedManifest")
@@ -174,7 +164,7 @@ function OperationListScreen({ isBalance }) {
             const url = window.URL.createObjectURL(new Blob([blob]));
             const link = document.createElement("a");
             link.href = url;
-            link.download = fileName; // Set the filename from the /getOutboundName response
+            link.download = fileName;
             document.body.appendChild(link);
             link.click();
             link.parentNode.removeChild(link);
@@ -190,6 +180,8 @@ function OperationListScreen({ isBalance }) {
       .catch((error) => {
         console.error("There was a problem getting the manifest name:", error);
       });
+
+    resetFilesForNewShip();
   };
 
   const currentMove = moves.length > 0 ? moves[currentIndex] : null;
@@ -207,14 +199,14 @@ function OperationListScreen({ isBalance }) {
       move[0][1] === 0
     ) {
       console.log("coming from truck");
-      setShowWeightInput(true); // Show the weight input
+      setShowWeightInput(true);
     } else {
-      setShowWeightInput(false); // Hide the weight input
+      setShowWeightInput(false);
     }
   };
 
   const handleWeightChange = (event) => {
-    setWeight(event.target.value); // Update the weight state when the input changes
+    setWeight(event.target.value);
   };
 
   const submitWeight = () => {
@@ -224,14 +216,14 @@ function OperationListScreen({ isBalance }) {
       row: currentMove[1][0],
       column: currentMove[1][1],
       moveNum: currentIndex,
-    }; // Construct data object with the weight
+    };
 
     fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data), // Convert the JavaScript object to a JSON string
+      body: JSON.stringify(data),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -243,8 +235,8 @@ function OperationListScreen({ isBalance }) {
   };
 
   useEffect(() => {
-    checkCurrentMove(currentMove); // Call the function within useEffect
-  }, [currentMove]); // Dependency array ensures this runs whenever currentMove changes
+    checkCurrentMove(currentMove);
+  }, [currentMove]);
 
   return (
     <div style={containerStyle}>
@@ -254,7 +246,6 @@ function OperationListScreen({ isBalance }) {
         <div>
           <GridComp currentMove={currentMove} moveNum={currentIndex} />
 
-          {/* Conditionally render the weight input and submit button */}
           {showWeightInput && (
             <div style={{ marginTop: "20px" }}>
               <label>Enter weight: </label>
@@ -277,23 +268,19 @@ function OperationListScreen({ isBalance }) {
                   Move {currentIndex + 1} of {moves.length}
                 </div>
                 {!isDone && (
-                  <>
-                    {/* <button
-                      onClick={goToPreviousMove}
-                      disabled={currentIndex === 0}
-                    >
-                      Previous
-                    </button> */}
-                    <button
-                      onClick={goToNextMove}
-                      disabled={currentIndex === moves.length - 1}
-                    >
-                      Next
-                    </button>
-                  </>
+                  <button
+                    onClick={goToNextMove}
+                    disabled={currentIndex === moves.length - 1}
+                  >
+                    Next
+                  </button>
                 )}
-                {isDone && <button onClick={handleDoneClick}>Done</button>}
               </>
+            )}
+
+            {/* Render 'Done' button when moves.length is 0 or isDone is true */}
+            {(moves.length === 0 || isDone) && (
+              <button onClick={handleDoneClick}>Done</button>
             )}
 
             {showDowloadManifestButton && (
@@ -301,9 +288,9 @@ function OperationListScreen({ isBalance }) {
                 <button onClick={handleDowloadManifestButtonClick}>
                   Download updated manifest
                 </button>
-                <button onClick={resetFilesForNewShip}>
+                {/* <button onClick={resetFilesForNewShip}>
                   Reset Files for New Ship
-                </button>
+                </button> */}
               </div>
             )}
           </div>
@@ -317,7 +304,7 @@ export default OperationListScreen;
 
 const containerStyle = {
   display: "flex",
-  flexDirection: "column", // Changed to column for vertical layout
+  flexDirection: "column",
   justifyContent: "center",
   alignItems: "center",
   height: "100vh",
