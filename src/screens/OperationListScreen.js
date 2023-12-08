@@ -124,10 +124,10 @@ function OperationListScreen({ isBalance }) {
     }
   };
 
-  const goToPreviousMove = () => {
-    setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
-    setIsDone(false);
-  };
+  // const goToPreviousMove = () => {
+  //   setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+  //   setIsDone(false);
+  // };
 
   const handleDoneClick = () => {
     setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length));
