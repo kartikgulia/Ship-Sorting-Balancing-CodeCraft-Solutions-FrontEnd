@@ -136,52 +136,43 @@ function OperationListScreen({ isBalance }) {
     setIsDone(true);
   };
 
-  const handleDowloadManifestButtonClick = () => {
+  const handleDowloadManifestButtonClick = async () => {
     console.log("Requesting outbound manifest name");
-    fetch("http://127.0.0.1:5000/getOutboundName")
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
+    try {
+      const nameResponse = await fetch("http://127.0.0.1:5000/getOutboundName");
+      if (!nameResponse.ok) {
         throw new Error(
           "Network response was not ok for getting manifest name."
         );
-      })
-      .then((data) => {
-        const fileName = data.fileName;
-        console.log("Downloading:", fileName);
+      }
+      const nameData = await nameResponse.json();
+      const fileName = nameData.fileName;
+      console.log("Downloading:", fileName);
 
-        fetch("http://127.0.0.1:5000/downloadUpdatedManifest")
-          .then((response) => {
-            if (response.ok) {
-              return response.blob();
-            }
-            throw new Error(
-              "Network response was not ok for downloading manifest."
-            );
-          })
-          .then((blob) => {
-            const url = window.URL.createObjectURL(new Blob([blob]));
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = fileName;
-            document.body.appendChild(link);
-            link.click();
-            link.parentNode.removeChild(link);
-            window.URL.revokeObjectURL(url);
-          })
-          .catch((error) => {
-            console.error(
-              "There was a problem with the fetch operation:",
-              error
-            );
-          });
-      })
-      .catch((error) => {
-        console.error("There was a problem getting the manifest name:", error);
-      });
+      const manifestResponse = await fetch(
+        "http://127.0.0.1:5000/downloadUpdatedManifest"
+      );
+      if (!manifestResponse.ok) {
+        throw new Error(
+          "Network response was not ok for downloading manifest."
+        );
+      }
+      const blob = await manifestResponse.blob();
 
-    resetFilesForNewShip();
+      const url = window.URL.createObjectURL(new Blob([blob]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      // Call resetFilesForNewShip after successful manifest download
+      resetFilesForNewShip();
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+    }
   };
 
   const currentMove = moves.length > 0 ? moves[currentIndex] : null;
