@@ -26,6 +26,8 @@ function OperationListScreen({ isBalance }) {
     })
       .then((response) => {
         if (response.ok) {
+          alert("Please Remember to Email the Manifest to the captain");
+          window.location.reload();
           return response.json();
         }
         throw new Error("Network response was not ok.");
@@ -51,7 +53,9 @@ function OperationListScreen({ isBalance }) {
       .then((data) => {
         setMoves(data.listOfMoves);
         setCurrentIndex(0);
-        setIsDone(data.listOfMoves.length === 0);
+        setIsDone(
+          data.listOfMoves.length === 0 || data.listOfMoves.length === 1
+        );
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
@@ -73,7 +77,9 @@ function OperationListScreen({ isBalance }) {
       .then((data) => {
         setMoves(data.listOfMoves);
         setCurrentIndex(0);
-        setIsDone(data.listOfMoves.length === 0);
+        setIsDone(
+          data.listOfMoves.length === 0 || data.listOfMoves.length === 1
+        );
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
