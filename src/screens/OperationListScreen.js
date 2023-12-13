@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import GridComp from "../components/OperationAnimationComponents/GridComponent";
 import Spinner from "../components/OperationAnimationComponents/Spinner";
 
-function OperationListScreen({ isBalance }) {
+function OperationListScreen() {
   const [moves, setMoves] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDone, setIsDone] = useState(false);
@@ -13,12 +13,8 @@ function OperationListScreen({ isBalance }) {
   const [weight, setWeight] = useState("");
 
   useEffect(() => {
-    if (isBalance === 1) {
-      fetchBalanceData();
-    } else {
-      fetchTransferData();
-    }
-  }, [isBalance]);
+    fetchOperationData();
+  }, []);
 
   const resetFilesForNewShip = () => {
     fetch("http://127.0.0.1:5000/resetFilesForNewShip", {
@@ -41,33 +37,9 @@ function OperationListScreen({ isBalance }) {
       });
   };
 
-  const fetchBalanceData = () => {
+  const fetchOperationData = () => {
     setIsLoading(true);
-    fetch("http://127.0.0.1:5000/balance")
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error("Network response was not ok.");
-      })
-      .then((data) => {
-        setMoves(data.listOfMoves);
-        setCurrentIndex(0);
-        setIsDone(
-          data.listOfMoves.length === 0 || data.listOfMoves.length === 1
-        );
-      })
-      .catch((error) => {
-        console.error("There was a problem with the fetch operation:", error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-
-  const fetchTransferData = () => {
-    setIsLoading(true);
-    fetch("http://127.0.0.1:5000/transfer")
+    fetch("http://127.0.0.1:5000/fetchOperationData")
       .then((response) => {
         if (response.ok) {
           return response.json();

@@ -33,7 +33,7 @@ const App = () => {
         return <UploadScreen />;
 
       case "OperationList":
-        return <OperationListScreen isBalance={0} />;
+        return <OperationListScreen />;
       default:
         return <Home />;
     }
