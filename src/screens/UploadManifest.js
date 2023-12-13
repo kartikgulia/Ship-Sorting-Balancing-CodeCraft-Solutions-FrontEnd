@@ -42,7 +42,7 @@ const UploadScreen = ({ isBalance }) => {
         isBalance === 0 ? (
           <SelectContainerScreen />
         ) : (
-          <OperationListScreen />
+          <OperationListScreen isBalance={1} />
         )
       ) : (
         <div>

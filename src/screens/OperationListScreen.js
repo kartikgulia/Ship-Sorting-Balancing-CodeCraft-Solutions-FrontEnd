@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import GridComp from "../components/OperationAnimationComponents/GridComponent";
 import Spinner from "../components/OperationAnimationComponents/Spinner";
 
-function OperationListScreen() {
-  const [moves, setMoves] = useState([]);
+function OperationListScreen({ isBalance }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDone, setIsDone] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -12,8 +11,13 @@ function OperationListScreen() {
   const [showWeightInput, setShowWeightInput] = useState(false);
   const [weight, setWeight] = useState("");
 
+  const [moveCoordinates, setMoveCoordinates] = useState([]);
+  const [names, setNames] = useState([]);
+  const [times, setTimes] = useState([]);
+  const [timesRemaining, setTimesRemaining] = useState([]);
+
   useEffect(() => {
-    fetchOperationData();
+    fetchOperationData(isBalance);
   }, []);
 
   const resetFilesForNewShip = () => {
@@ -37,9 +41,24 @@ function OperationListScreen() {
       });
   };
 
-  const fetchOperationData = () => {
+  const fetchOperationData = (isBalance) => {
     setIsLoading(true);
-    fetch("http://127.0.0.1:5000/fetchOperationData")
+
+    // The data to be sent in the request
+    const requestData = {
+      isBalance: isBalance,
+    };
+
+    console.log(requestData);
+
+    // Using fetch with POST method
+    fetch("http://127.0.0.1:5000/fetchOperationData", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestData),
+    })
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -47,10 +66,18 @@ function OperationListScreen() {
         throw new Error("Network response was not ok.");
       })
       .then((data) => {
-        setMoves(data.listOfMoves);
+        setMoveCoordinates(data.moveCoordinates);
+        setNames(data.names);
+        setTimes(data.times);
+        setTimesRemaining(data.timesRemaining);
+
+        console.log("Info from backend");
+        console.log(names);
+        console.log(times);
+        console.log(timesRemaining);
         setCurrentIndex(0);
         setIsDone(
-          data.listOfMoves.length === 0 || data.listOfMoves.length === 1
+          data.moveCoordinates.length === 0 || data.moveCoordinates.length === 1
         );
       })
       .catch((error) => {
@@ -62,9 +89,9 @@ function OperationListScreen() {
   };
 
   const propagateWeights = () => {
-    if (currentIndex < moves.length) {
-      const currentMoveFrom = moves[currentIndex][0];
-      const currentMoveTo = moves[currentIndex][1];
+    if (currentIndex < moveCoordinates.length) {
+      const currentMoveFrom = moveCoordinates[currentIndex][0];
+      const currentMoveTo = moveCoordinates[currentIndex][1];
       const nextMoveNum = currentIndex + 1;
 
       const url = "http://127.0.0.1:5000/propagateWeights";
@@ -74,7 +101,7 @@ function OperationListScreen() {
         toRow: currentMoveTo[0],
         toCol: currentMoveTo[1],
         moveNum: nextMoveNum,
-        totalNumMoves: moves.length,
+        totalNumMoves: moveCoordinates.length,
       };
 
       fetch(url, {
@@ -95,9 +122,14 @@ function OperationListScreen() {
   };
 
   const goToNextMove = () => {
-    setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length - 1));
+    setCurrentIndex((prevIndex) =>
+      Math.min(prevIndex + 1, moveCoordinates.length - 1)
+    );
     propagateWeights();
-    if (currentIndex === moves.length - 2 || moves.length === 1) {
+    if (
+      currentIndex === moveCoordinates.length - 2 ||
+      moveCoordinates.length === 1
+    ) {
       setIsDone(true);
     }
   };
@@ -108,7 +140,9 @@ function OperationListScreen() {
   // };
 
   const handleDoneClick = () => {
-    setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length));
+    setCurrentIndex((prevIndex) =>
+      Math.min(prevIndex + 1, moveCoordinates.length)
+    );
     propagateWeights();
     setShowDowloadManifestButton(true);
     setIsDone(true);
@@ -153,7 +187,8 @@ function OperationListScreen() {
     }
   };
 
-  const currentMove = moves.length > 0 ? moves[currentIndex] : null;
+  const currentMove =
+    moveCoordinates.length > 0 ? moveCoordinates[currentIndex] : null;
 
   useEffect(() => {
     console.log("Current Move:", currentMove);
@@ -231,15 +266,15 @@ function OperationListScreen() {
           )}
 
           <div style={{ marginTop: "20px" }}>
-            {moves.length > 0 && (
+            {moveCoordinates.length > 0 && (
               <>
                 <div>
-                  Move {currentIndex + 1} of {moves.length}
+                  Move {currentIndex + 1} of {moveCoordinates.length}
                 </div>
                 {!isDone && (
                   <button
                     onClick={goToNextMove}
-                    disabled={currentIndex === moves.length - 1}
+                    disabled={currentIndex === moveCoordinates.length - 1}
                   >
                     Next
                   </button>
@@ -248,7 +283,7 @@ function OperationListScreen() {
             )}
 
             {/* Render 'Done' button when moves.length is 0 or isDone is true */}
-            {(moves.length === 0 || isDone) && (
+            {(moveCoordinates.length === 0 || isDone) && (
               <button onClick={handleDoneClick}>Done</button>
             )}
 
