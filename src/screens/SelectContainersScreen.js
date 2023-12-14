@@ -7,9 +7,11 @@ import YourSelectedContainers from "../components/SelectContainerComponents/Your
 // Bottom Half
 import EnterNameOfContainerComponent from "../components/SelectContainerComponents/EnterNameOfContainerComponent";
 
+import OperationListScreen from "./OperationListScreen";
 const SelectContainerScreen = () => {
   const [selectedNames, setSelectedNames] = useState([]);
   const [selectedPositions, setSelectedPositions] = useState([]); // New state for storing positions
+  const [isRequestSuccessful, setIsRequestSuccessful] = useState(false);
 
   const handleSelectedItems = (selectedItems, positions) => {
     setSelectedNames(selectedItems);
@@ -45,7 +47,7 @@ const SelectContainerScreen = () => {
       if (response.ok) {
         const jsonResponse = await response.json();
         console.log("Response:", jsonResponse);
-        // Handle success response
+        setIsRequestSuccessful(true); // Update state on successful response
       } else {
         // Handle non-success response
         console.error("Request failed:", response.status, response.statusText);
@@ -56,17 +58,25 @@ const SelectContainerScreen = () => {
   };
 
   return (
-    <div className="select-container-screen">
-      <div className="container">
+    <div>
+      <div style={containerStyle}>
         <GridComp onSelectedItemsChange={handleSelectedItems} />
         <YourSelectedContainers selectedNames={selectedNames} />
       </div>
 
       <EnterNameOfContainerComponent onNamesUpdate={handleNamesUpdate} />
 
-      <button onClick={sendTransferInfo} className="button-style">Send Transfer Info</button>
+      <button onClick={sendTransferInfo}>Send Transfer Info</button>
     </div>
   );
+};
+
+const containerStyle = {
+  display: "flex",
+  flexDirection: "row", // Change to row for side-by-side layout
+  justifyContent: "center", // Center horizontally
+  alignItems: "center", // Center vertically
+  height: "50vh", // Full viewport height
 };
 
 export default SelectContainerScreen;

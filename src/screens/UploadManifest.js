@@ -1,8 +1,9 @@
 import SelectContainerScreen from "./SelectContainersScreen";
+import OperationListScreen from "./OperationListScreen";
 import React, { useState } from "react";
 import './UploadManifest.css'
 
-const UploadScreen = () => {
+const UploadScreen = ({ isBalance }) => {
   const [uploaded, setUploaded] = useState(false);
 
   const handleUpload = async (event) => {

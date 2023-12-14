@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import './viewlogs.css'
+
 const Viewlog = () => {
   const [password, setPassword] = useState("");
   const [showText, setShowText] = useState(false);

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Home from "./home";
 import './signin.css'
 
-
 const SignIn = () => {
   const [showUploadScreen, setShowUploadScreen] = useState(false);
   const [username, setUsername] = useState("");

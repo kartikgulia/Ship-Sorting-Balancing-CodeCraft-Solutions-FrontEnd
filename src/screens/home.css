@@ -1,5 +1,5 @@
 .home-container {
-    background-color: green;
+    background-color: white;
     padding: 20px;
   }
   
@@ -21,12 +21,5 @@
   
   body,
 .App {
-  background-color: green; /* Set the background color to green for the entire app */
+  background-color: white; /* Set the background color to green for the entire app */
 }
-
-.home-title {
-    font-size: 24px; /* Adjust the font size */
-    font-family: 'Arial', sans-serif; /* Change the font family if needed */
-    color: pink; /* Set text color to a "cute" color */
-    /* Add any other styles to make the text appear cute */
-  }

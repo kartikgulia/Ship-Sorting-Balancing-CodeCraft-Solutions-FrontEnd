@@ -1,26 +1,22 @@
 import React, { useState } from "react";
-
 import UploadScreen from "./UploadManifest"; // Import the UploadScreen component
-import "./home.css"
+import './home.css'
 const Home = () => {
   const [showUploadScreen, setShowUploadScreen] = useState(false);
+  const [isBalance, setIsBalance] = useState(false);
 
   const handleTransfer = () => {
-    // Add logic for transferring
+    // Logic for transferring
     console.log("Transfer button clicked");
-    // Example: Trigger a transfer function or API call
-
-    // Show the UploadScreen component
-    setShowUploadScreen(true);
+    setIsBalance(false); // Set isBalance to false
+    setShowUploadScreen(true); // Show the UploadScreen component
   };
 
   const handleCheckBalance = () => {
-    // Add logic for checking balance
+    // Logic for checking balance
     console.log("Balance button clicked");
-    // Example: Fetch balance information
-
-    // Show the UploadScreen component
-    setShowUploadScreen(true);
+    setIsBalance(true); // Set isBalance to true
+    setShowUploadScreen(true); // Show the UploadScreen component
   };
 
   return (
