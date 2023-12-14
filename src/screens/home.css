@@ -1,0 +1,25 @@
+.home-container {
+    background-color: white;
+    padding: 20px;
+  }
+  
+  .button-row {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+  
+  .action-button {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  body,
+.App {
+  background-color: white; /* Set the background color to green for the entire app */
+}
