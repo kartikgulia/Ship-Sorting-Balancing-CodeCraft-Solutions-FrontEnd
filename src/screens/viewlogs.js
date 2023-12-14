@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import './viewlogs.css'
 
 const Viewlog = () => {
   const [password, setPassword] = useState("");
@@ -58,28 +59,28 @@ const Viewlog = () => {
   };
 
   return (
-    <div>
-      <label>
-        Password:
-        <input
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
-        />
-      </label>
-      <button onClick={handlePasswordSubmit}>Submit</button>
+    <div className="viewlog-container">
+      Password: 
+      <input
+        type="password"
+        value={password}
+        onChange={handlePasswordChange}
+        className="password-input"
+        placeholder="Enter Password"
+      />
+      <button onClick={handlePasswordSubmit} className="button">Submit</button>
 
       {showText && (
         <div>
-          <pre>{fileContent}</pre>
-          <button onClick={handleDownloadTextFile}>Download Text File</button>
+          <pre className="file-content">{fileContent}</pre>
+          <button onClick={handleDownloadTextFile} className="button">Download Text File</button>
         </div>
       )}
 
       {logContent && (
         <div>
-          <h2>Log Content:</h2>
-          <pre>{logContent}</pre>
+          <h2 className="log-content">Log Content:</h2>
+          <pre className="log-content">{logContent}</pre>
         </div>
       )}
     </div>

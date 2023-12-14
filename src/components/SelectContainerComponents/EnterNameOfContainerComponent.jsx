@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import './EnterNameOfContainerComponents.css'; 
 
 export default function EnterNameOfContainerComponent({ onNamesUpdate }) {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -16,15 +17,15 @@ export default function EnterNameOfContainerComponent({ onNamesUpdate }) {
   };
 
   return (
-    <div style={containerStyle}>
+    <div className="container-style"> 
       <h1> Enter name </h1>
       <input
         type="text"
         value={names[currentSlide] || ""}
         onChange={handleInputChange}
+        className="input-style" 
       />
-      <button onClick={handleNext}>Confirm Name</button>
-      {/* Display the names for demonstration purposes */}
+      <button onClick={handleNext} className="button-style">Confirm Name</button> 
       <div>
         <h2>Entered Names:</h2>
         {names.map((name, index) => (

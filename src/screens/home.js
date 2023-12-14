@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-
 import UploadScreen from "./UploadManifest"; // Import the UploadScreen component
-
+import './home.css'
 const Home = () => {
   const [showUploadScreen, setShowUploadScreen] = useState(false);
   const [isBalance, setIsBalance] = useState(false);
