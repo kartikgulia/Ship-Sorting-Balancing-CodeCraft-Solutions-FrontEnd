@@ -3,6 +3,9 @@ import GridComp from "../components/OperationAnimationComponents/GridComponent";
 import Spinner from "../components/OperationAnimationComponents/Spinner";
 
 function OperationListScreen({ isBalance }) {
+  const [moves, setMoves] = useState([]);
+
+  const [names, setNames] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDone, setIsDone] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -11,14 +14,13 @@ function OperationListScreen({ isBalance }) {
   const [showWeightInput, setShowWeightInput] = useState(false);
   const [weight, setWeight] = useState("");
 
-  const [moveCoordinates, setMoveCoordinates] = useState([]);
-  const [names, setNames] = useState([]);
-  const [times, setTimes] = useState([]);
-  const [timesRemaining, setTimesRemaining] = useState([]);
-
   useEffect(() => {
-    fetchOperationData(isBalance);
-  }, []);
+    if (isBalance === 1) {
+      fetchBalanceData();
+    } else {
+      fetchTransferData();
+    }
+  }, [isBalance]);
 
   const resetFilesForNewShip = () => {
     fetch("http://127.0.0.1:5000/resetFilesForNewShip", {
@@ -41,24 +43,9 @@ function OperationListScreen({ isBalance }) {
       });
   };
 
-  const fetchOperationData = (isBalance) => {
+  const fetchBalanceData = () => {
     setIsLoading(true);
-
-    // The data to be sent in the request
-    const requestData = {
-      isBalance: isBalance,
-    };
-
-    console.log(requestData);
-
-    // Using fetch with POST method
-    fetch("http://127.0.0.1:5000/fetchOperationData", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
-    })
+    fetch("http://127.0.0.1:5000/balance")
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -66,15 +53,33 @@ function OperationListScreen({ isBalance }) {
         throw new Error("Network response was not ok.");
       })
       .then((data) => {
-        setMoveCoordinates(data.moveCoordinates);
-        setNames(data.names);
-        setTimes(data.times);
-        setTimesRemaining(data.timesRemaining);
-
-        console.log("Info from backend");
+        setMoves(data.moveCoordinates);
+        setNames([]);
         console.log(names);
-        console.log(times);
-        console.log(timesRemaining);
+        setCurrentIndex(0);
+        setIsDone(
+          data.moveCoordinates.length === 0 || data.moveCoordinates.length === 1
+        );
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  const fetchTransferData = () => {
+    setIsLoading(true);
+    fetch("http://127.0.0.1:5000/transfer")
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then((data) => {
+        setMoves(data.moveCoordinates);
         setCurrentIndex(0);
         setIsDone(
           data.moveCoordinates.length === 0 || data.moveCoordinates.length === 1
@@ -89,9 +94,9 @@ function OperationListScreen({ isBalance }) {
   };
 
   const propagateWeights = () => {
-    if (currentIndex < moveCoordinates.length) {
-      const currentMoveFrom = moveCoordinates[currentIndex][0];
-      const currentMoveTo = moveCoordinates[currentIndex][1];
+    if (currentIndex < moves.length) {
+      const currentMoveFrom = moves[currentIndex][0];
+      const currentMoveTo = moves[currentIndex][1];
       const nextMoveNum = currentIndex + 1;
 
       const url = "http://127.0.0.1:5000/propagateWeights";
@@ -101,7 +106,7 @@ function OperationListScreen({ isBalance }) {
         toRow: currentMoveTo[0],
         toCol: currentMoveTo[1],
         moveNum: nextMoveNum,
-        totalNumMoves: moveCoordinates.length,
+        totalNumMoves: moves.length,
       };
 
       fetch(url, {
@@ -122,14 +127,9 @@ function OperationListScreen({ isBalance }) {
   };
 
   const goToNextMove = () => {
-    setCurrentIndex((prevIndex) =>
-      Math.min(prevIndex + 1, moveCoordinates.length - 1)
-    );
+    setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length - 1));
     propagateWeights();
-    if (
-      currentIndex === moveCoordinates.length - 2 ||
-      moveCoordinates.length === 1
-    ) {
+    if (currentIndex === moves.length - 2 || moves.length === 1) {
       setIsDone(true);
     }
   };
@@ -140,9 +140,7 @@ function OperationListScreen({ isBalance }) {
   // };
 
   const handleDoneClick = () => {
-    setCurrentIndex((prevIndex) =>
-      Math.min(prevIndex + 1, moveCoordinates.length)
-    );
+    setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length));
     propagateWeights();
     setShowDowloadManifestButton(true);
     setIsDone(true);
@@ -187,8 +185,7 @@ function OperationListScreen({ isBalance }) {
     }
   };
 
-  const currentMove =
-    moveCoordinates.length > 0 ? moveCoordinates[currentIndex] : null;
+  const currentMove = moves.length > 0 ? moves[currentIndex] : null;
 
   useEffect(() => {
     console.log("Current Move:", currentMove);
@@ -266,15 +263,15 @@ function OperationListScreen({ isBalance }) {
           )}
 
           <div style={{ marginTop: "20px" }}>
-            {moveCoordinates.length > 0 && (
+            {moves.length > 0 && (
               <>
                 <div>
-                  Move {currentIndex + 1} of {moveCoordinates.length}
+                  Move {currentIndex + 1} of {moves.length}
                 </div>
                 {!isDone && (
                   <button
                     onClick={goToNextMove}
-                    disabled={currentIndex === moveCoordinates.length - 1}
+                    disabled={currentIndex === moves.length - 1}
                   >
                     Next
                   </button>
@@ -283,7 +280,7 @@ function OperationListScreen({ isBalance }) {
             )}
 
             {/* Render 'Done' button when moves.length is 0 or isDone is true */}
-            {(moveCoordinates.length === 0 || isDone) && (
+            {(moves.length === 0 || isDone) && (
               <button onClick={handleDoneClick}>Done</button>
             )}
 
