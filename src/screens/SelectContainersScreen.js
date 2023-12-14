@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import './SelectContainersScreen.css'
 // Top Half
 import GridComp from "../components/SelectContainerComponents/GridComponent";
 import YourSelectedContainers from "../components/SelectContainerComponents/YourSelectedContainers";
@@ -56,25 +56,17 @@ const SelectContainerScreen = () => {
   };
 
   return (
-    <div>
-      <div style={containerStyle}>
+    <div className="select-container-screen">
+      <div className="container">
         <GridComp onSelectedItemsChange={handleSelectedItems} />
         <YourSelectedContainers selectedNames={selectedNames} />
       </div>
 
       <EnterNameOfContainerComponent onNamesUpdate={handleNamesUpdate} />
 
-      <button onClick={sendTransferInfo}>Send Transfer Info</button>
+      <button onClick={sendTransferInfo} className="button-style">Send Transfer Info</button>
     </div>
   );
-};
-
-const containerStyle = {
-  display: "flex",
-  flexDirection: "row", // Change to row for side-by-side layout
-  justifyContent: "center", // Center horizontally
-  alignItems: "center", // Center vertically
-  height: "50vh", // Full viewport height
 };
 
 export default SelectContainerScreen;

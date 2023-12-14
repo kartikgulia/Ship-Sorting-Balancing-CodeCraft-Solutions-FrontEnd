@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Home from "./home";
-
+import './signin.css'
 
 
 const SignIn = () => {
@@ -53,20 +53,27 @@ const SignIn = () => {
       {showUploadScreen ? (
         <Home />
       ) : (
-        <div>
-            <h2>Sign In Page</h2>
-            <form>
-              <label>
-                Enter your name: <br />
-                <input type="text" value={username} onChange={handleInputChange} />
-              </label>
-              <button type="button" onClick={handleProceed}>
+        <div className="signin-container">
+          <h2>Sign In Page</h2>
+          <form>
+            <div className="input-wrapper"> {/* Wrapper for input and button */}
+              <input
+                type="text"
+                value={username}
+                onChange={handleInputChange}
+                className="signin-input"
+                placeholder="Enter your name"
+              />
+              <button
+                className="signin-button"
+                type="button"
+                onClick={handleProceed}
+              >
                 Proceed
               </button>
-            </form>
-            {/* Conditional rendering of UploadScreen based on showUploadScreen state */}
-            {/* {showUploadScreen ? <Home /> : null} */}
-          </div>
+            </div>
+          </form>
+        </div>
       )}
     </div> 
   );

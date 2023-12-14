@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import GridComp from "../components/OperationAnimationComponents/GridComponent";
 // Import a loading spinner component (you can use any spinner of your choice)
 import Spinner from "../components/OperationAnimationComponents/Spinner";
+import Home from './home';
 
 function OperationListScreen({ isBalance }) {
   const [moves, setMoves] = useState([]);
@@ -34,7 +35,8 @@ function OperationListScreen({ isBalance }) {
       })
       .then((data) => {
         console.log("Success:", data);
-        alert("Please Remember to Email the Manifest to the captain");
+        if (alert("Please Remember to Email the Manifest to the captain"))
+         {return <Home/>};
       })
       .catch((error) => {
         console.error("Error:", error);

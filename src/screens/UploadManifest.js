@@ -1,5 +1,6 @@
 import SelectContainerScreen from "./SelectContainersScreen";
 import React, { useState } from "react";
+import './UploadManifest.css'
 
 const UploadScreen = () => {
   const [uploaded, setUploaded] = useState(false);
@@ -36,17 +37,18 @@ const UploadScreen = () => {
   };
 
   return (
-    <div>
+    <div className="upload-container">
       {uploaded ? (
+        // If uploaded is true, render SelectContainerScreen
         <SelectContainerScreen />
       ) : (
         <div>
-          <h1>Upload a Text File</h1>
-          <form onSubmit={handleUpload}>
-            <label htmlFor="textfile">Select a Text File:</label>
-            <input type="file" name="textfile" id="textfile" accept=".txt" />
+          <h1 className="upload-title">Upload a Text File</h1>
+          <form className="upload-form" onSubmit={handleUpload}>
+            <label htmlFor="textfile" className="upload-label">Select a Text File:</label>
+            <input type="file" name="textfile" id="textfile" accept=".txt" className="upload-input" />
             <br />
-            <input type="submit" value="Upload" />
+            <input type="submit" value="Upload" className="upload-button" />
           </form>
         </div>
       )}
