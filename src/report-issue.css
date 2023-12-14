@@ -1,0 +1,32 @@
+.word-counter-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  
+  .word-counter-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .word-counter-textarea {
+    width: 70%;
+    height: 200px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+  
+  .word-counter-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    background-color: black;
+    color: white;
+  }
