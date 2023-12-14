@@ -146,8 +146,10 @@ function OperationListScreen({ isBalance }) {
   };
 
   const goToNextMove = () => {
+    writeToLogDuringTransfer();
     setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length - 1));
     propagateWeights();
+
     if (currentIndex === moves.length - 2 || moves.length === 1) {
       setIsDone(true);
     }
@@ -159,6 +161,7 @@ function OperationListScreen({ isBalance }) {
   // };
 
   const handleDoneClick = () => {
+    writeToLogDuringTransfer();
     setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length));
     propagateWeights();
     setShowDowloadManifestButton(true);
@@ -210,6 +213,52 @@ function OperationListScreen({ isBalance }) {
   const currentTime = times.length > 0 ? times[currentIndex] : null;
   const currentTimeRemaining =
     timesRemaining.length > 0 ? timesRemaining[currentIndex] : null;
+
+  const writeToLogDuringTransfer = () => {
+    if (currentMove == null) {
+      return;
+    }
+    const fromPosition = currentMove[0];
+    const toPosition = currentMove[1];
+
+    var textForLog;
+
+    // If the coordinate at fromPosition is [0,0], that means we are getting a container from the truck
+    if (fromPosition[0] === 0 && fromPosition[1] === 0) {
+      textForLog = `"${currentName}" is onloaded`;
+    } else if (toPosition[0] === 0 && toPosition[1] === 0) {
+      textForLog = `"${currentName}" is offloaded`;
+    }
+
+    // Check if textForLog has been set
+    if (!textForLog) {
+      return;
+    }
+
+    // Send POST request to backend
+    fetch("http://127.0.0.1:5000/writeTransferToLog", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ logText: textForLog }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok.");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Log entry successful:", data);
+      })
+      .catch((error) => {
+        console.error("Error writing to log:", error);
+      });
+
+    console.log(textForLog);
+  };
+
   useEffect(() => {
     console.log("Current Move:", currentMove);
   }, [currentMove]);
