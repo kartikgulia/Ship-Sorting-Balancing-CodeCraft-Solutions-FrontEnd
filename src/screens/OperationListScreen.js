@@ -13,6 +13,7 @@ function OperationListScreen({ isBalance }) {
   const [isLoading, setIsLoading] = useState(false);
   const [showDowloadManifestButton, setShowDowloadManifestButton] =
     useState(false);
+  const [showDoneAndTexts, setShowDoneAndTexts] = useState(true);
   const [showWeightInput, setShowWeightInput] = useState(false);
   const [weight, setWeight] = useState("");
 
@@ -161,6 +162,7 @@ function OperationListScreen({ isBalance }) {
     propagateWeights();
     setShowDowloadManifestButton(true);
     setIsDone(true);
+    setShowDoneAndTexts(false); // Hide Done button and h3 texts
   };
 
   const handleDowloadManifestButtonClick = async () => {
@@ -249,6 +251,8 @@ function OperationListScreen({ isBalance }) {
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
+        setWeight(""); // Clear the weight input
+        alert("Weight has been saved"); // Show alert
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -278,18 +282,25 @@ function OperationListScreen({ isBalance }) {
 
       {!isLoading && (
         <div>
+          {showDoneAndTexts && (
+            <>{currentMove && <h3>{formatMoveDisplay(currentMove)}</h3>}</>
+          )}
+
           <GridComp
             currentMove={currentMove}
             moveNum={currentIndex}
             currentName={currentName}
           />
-          <h3> {currentMove && <div>{formatMoveDisplay(currentMove)}</div>}</h3>
-          <h3>This move will take {currentTime} minutes </h3>
-          <h3>
-            {" "}
-            There are {currentTimeRemaining} minutes left until all moves are
-            done
-          </h3>
+
+          {!isLoading && showDoneAndTexts && (
+            <div>
+              <h3>This move will take {currentTime} minutes </h3>
+              <h3>
+                There are {currentTimeRemaining} minutes left until all moves
+                are done
+              </h3>
+            </div>
+          )}
 
           {showWeightInput && (
             <div style={{ marginTop: "20px" }}>
@@ -307,7 +318,7 @@ function OperationListScreen({ isBalance }) {
           )}
 
           <div style={{ marginTop: "20px" }}>
-            {moves.length > 0 && (
+            {moves.length > 0 && showDoneAndTexts && (
               <>
                 <div>
                   Move {currentIndex + 1} of {moves.length}
@@ -323,8 +334,7 @@ function OperationListScreen({ isBalance }) {
               </>
             )}
 
-            {/* Render 'Done' button when moves.length is 0 or isDone is true */}
-            {(moves.length === 0 || isDone) && (
+            {showDoneAndTexts && (moves.length === 0 || isDone) && (
               <button onClick={handleDoneClick}>Done</button>
             )}
 
@@ -333,9 +343,6 @@ function OperationListScreen({ isBalance }) {
                 <button onClick={handleDowloadManifestButtonClick}>
                   Download updated manifest
                 </button>
-                {/* <button onClick={resetFilesForNewShip}>
-                  Reset Files for New Ship
-                </button> */}
               </div>
             )}
           </div>
