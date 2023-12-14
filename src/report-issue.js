@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import './report-issue.css'
+import React, { useState } from "react";
+import "./report-issue.css";
 
 // function Issue() {
 //   return (
@@ -12,7 +12,7 @@ import './report-issue.css'
 // export default Issue;
 
 const WordCounter = () => {
-  const [paragraph, setParagraph] = useState('');
+  const [paragraph, setParagraph] = useState("");
   const [wordCount, setWordCount] = useState(0);
 
   const handleInputChange = (event) => {
@@ -26,7 +26,26 @@ const WordCounter = () => {
 
   const handleSubmit = () => {
     // Add your submission logic here
-    console.log('Submitted paragraph:', paragraph);
+    console.log("Submitted paragraph:", paragraph);
+
+    const url = "http://127.0.0.1:5000/writeIssueToLog";
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ issueText: paragraph }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+
+        alert("Issue has been recorded in the log"); // Show alert
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
@@ -40,10 +59,10 @@ const WordCounter = () => {
         value={paragraph}
         onChange={handleInputChange}
       />
-      <div style={{ textAlign: 'right' }}>
-        Word Count: {wordCount}
-      </div>
-      <button className="word-counter-button" onClick={handleSubmit}>Submit</button>
+      <div style={{ textAlign: "right" }}>Word Count: {wordCount}</div>
+      <button className="word-counter-button" onClick={handleSubmit}>
+        Submit
+      </button>
     </div>
   );
 };
