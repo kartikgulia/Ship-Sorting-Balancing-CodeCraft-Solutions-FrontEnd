@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import './viewlogs.css'
+import "./viewlogs.css";
 
 const Viewlog = () => {
   const [password, setPassword] = useState("");
@@ -20,7 +20,14 @@ const Viewlog = () => {
       setShowText(true);
     }
   };
-  const handleDownloadTextFile = () => {
+  const handleDownloadTextFile = async () => {
+    const nameResponse = await fetch("http://127.0.0.1:5000/getLogFileName");
+    if (!nameResponse.ok) {
+      throw new Error("Network response was not ok for getting log name.");
+    }
+    const nameData = await nameResponse.json();
+    const filename = nameData.fileName;
+
     // Fetch log file content
     fetch("http://127.0.0.1:5000/downloadLog")
       .then((response) => {
@@ -29,7 +36,6 @@ const Viewlog = () => {
           "Content-Disposition"
         );
 
-        let filename = "Keogh2023.txt"; // Default filename
         if (contentDispositionHeader) {
           const matches = contentDispositionHeader.match(/filename="(.+)"/);
           if (matches && matches.length > 1) {
@@ -56,11 +62,16 @@ const Viewlog = () => {
       .catch((error) => {
         console.error("Error fetching log file:", error);
       });
+
+    const removeLog = await fetch("http://127.0.0.1:5000/removeLog");
+    if (!nameResponse.ok) {
+      throw new Error("Network response was not ok for removing log");
+    }
   };
 
   return (
     <div className="viewlog-container">
-      Password: 
+      Password:
       <input
         type="password"
         value={password}
@@ -68,15 +79,17 @@ const Viewlog = () => {
         className="password-input"
         placeholder="Enter Password"
       />
-      <button onClick={handlePasswordSubmit} className="button">Submit</button>
-
+      <button onClick={handlePasswordSubmit} className="button">
+        Submit
+      </button>
       {showText && (
         <div>
           <pre className="file-content">{fileContent}</pre>
-          <button onClick={handleDownloadTextFile} className="button">Download Text File</button>
+          <button onClick={handleDownloadTextFile} className="button">
+            Download Text File
+          </button>
         </div>
       )}
-
       {logContent && (
         <div>
           <h2 className="log-content">Log Content:</h2>
