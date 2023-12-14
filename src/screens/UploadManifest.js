@@ -1,6 +1,5 @@
 import SelectContainerScreen from "./SelectContainersScreen";
 import OperationListScreen from "./OperationListScreen";
-import OperationListScreen from "./OperationListScreen";
 import React, { useState } from "react";
 import "./UploadManifest.css";
 
