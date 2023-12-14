@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import ContainerComponent from "../SelectContainerComponents/ContainerComponent";
 
-export default function GridComp({ currentMove, moveNum }) {
+export default function GridComp({ currentMove, moveNum, currentName }) {
   // State for the dynamic grid data
   const [gridData, setGridData] = useState([]);
 
@@ -34,10 +34,7 @@ export default function GridComp({ currentMove, moveNum }) {
     fetchUpdatedManifestForMove();
   }, [fetchUpdatedManifestForMove]); // Dependency for useEffect
   const formatMoveDisplay = (move) => {
-    let start =
-      move[0][0] === 0 && move[0][1] === 0
-        ? "Truck"
-        : `[${move[0].join(", ")}]`;
+    let start = currentName;
 
     let end =
       move[1][0] === 0 && move[1][1] === 0
@@ -71,8 +68,6 @@ export default function GridComp({ currentMove, moveNum }) {
           })}
         </React.Fragment>
       ))}
-
-      {currentMove && <div>{formatMoveDisplay(currentMove)}</div>}
     </div>
   );
 }

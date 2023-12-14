@@ -3,7 +3,7 @@ import React from "react";
 const ContainerComponent = ({
   value,
   isSelected,
-  onClick,
+  onClick = () => {}, // Default onClick handler
   startPos,
   endPos,
 }) => {

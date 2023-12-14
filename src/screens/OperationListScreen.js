@@ -4,8 +4,10 @@ import Spinner from "../components/OperationAnimationComponents/Spinner";
 
 function OperationListScreen({ isBalance }) {
   const [moves, setMoves] = useState([]);
-
   const [names, setNames] = useState([]);
+  const [times, setTimes] = useState([]);
+  const [timesRemaining, setTimesRemaining] = useState([]);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDone, setIsDone] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +56,14 @@ function OperationListScreen({ isBalance }) {
       })
       .then((data) => {
         setMoves(data.moveCoordinates);
-        setNames([]);
+        setNames(data.names);
+        setTimes(data.times);
+        setTimesRemaining(data.timesRemaining);
+
+        console.log("Info from backend");
+        console.log(names);
+        console.log(times);
+        console.log(timesRemaining);
         console.log(names);
         setCurrentIndex(0);
         setIsDone(
@@ -80,6 +89,14 @@ function OperationListScreen({ isBalance }) {
       })
       .then((data) => {
         setMoves(data.moveCoordinates);
+        setNames(data.names);
+        setTimes(data.times);
+        setTimesRemaining(data.timesRemaining);
+
+        console.log("Info from backend");
+        console.log(names);
+        console.log(times);
+        console.log(timesRemaining);
         setCurrentIndex(0);
         setIsDone(
           data.moveCoordinates.length === 0 || data.moveCoordinates.length === 1
@@ -186,7 +203,10 @@ function OperationListScreen({ isBalance }) {
   };
 
   const currentMove = moves.length > 0 ? moves[currentIndex] : null;
-
+  const currentName = names.length > 0 ? names[currentIndex] : null;
+  const currentTime = times.length > 0 ? times[currentIndex] : null;
+  const currentTimeRemaining =
+    timesRemaining.length > 0 ? timesRemaining[currentIndex] : null;
   useEffect(() => {
     console.log("Current Move:", currentMove);
   }, [currentMove]);
@@ -239,13 +259,37 @@ function OperationListScreen({ isBalance }) {
     checkCurrentMove(currentMove);
   }, [currentMove]);
 
+  const formatMoveDisplay = (move) => {
+    let start =
+      move[0][0] === 0 && move[0][1] === 0
+        ? `${currentName} from Truck`
+        : ` ${currentName} at [${move[0].join(", ")}]`;
+
+    let end =
+      move[1][0] === 0 && move[1][1] === 0
+        ? `Truck`
+        : `[${move[1].join(", ")}]`;
+    return `Current Move: ${start} to ${end}`;
+  };
+
   return (
     <div style={containerStyle}>
       {isLoading && <Spinner />}
 
       {!isLoading && (
         <div>
-          <GridComp currentMove={currentMove} moveNum={currentIndex} />
+          <GridComp
+            currentMove={currentMove}
+            moveNum={currentIndex}
+            currentName={currentName}
+          />
+          <h3> {currentMove && <div>{formatMoveDisplay(currentMove)}</div>}</h3>
+          <h3>This move will take {currentTime} minutes </h3>
+          <h3>
+            {" "}
+            There are {currentTimeRemaining} minutes left until all moves are
+            done
+          </h3>
 
           {showWeightInput && (
             <div style={{ marginTop: "20px" }}>
