@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import './report-issue.css'
 
 // function Issue() {
 //   return (
@@ -30,11 +30,12 @@ const WordCounter = () => {
   };
 
   return (
-    <div>
+    <div className="word-counter-container">
       <div>
-       <h1>Report Issue</h1>
+        <h1 className="word-counter-title">Report Issue</h1>
       </div>
       <textarea
+        className="word-counter-textarea"
         placeholder="Enter Text"
         value={paragraph}
         onChange={handleInputChange}
@@ -42,7 +43,7 @@ const WordCounter = () => {
       <div style={{ textAlign: 'right' }}>
         Word Count: {wordCount}
       </div>
-      <button onClick={handleSubmit}>Submit</button>
+      <button className="word-counter-button" onClick={handleSubmit}>Submit</button>
     </div>
   );
 };
