@@ -22,17 +22,18 @@ function OperationListScreen({ isBalance, moveNumFromPowerCut }) {
   const [triggerSave, setTriggerSave] = useState(false);
 
   useEffect(() => {
-    if (moveNumFromPowerCut) {
-      fetchPowerCutData(moveNumFromPowerCut);
-    } else {
-      if (isBalance === 1) {
-        fetchBalanceData();
-      } else {
-        fetchTransferData();
-      }
+    if (isBalance === 1) {
+      fetchBalanceData();
+    } else if (isBalance == 0) {
+      fetchTransferData();
     }
-  }, [isBalance, moveNumFromPowerCut]);
+  }, [isBalance]);
 
+  useEffect(() => {
+    if (moveNumFromPowerCut >= 0) {
+      fetchPowerCutData(moveNumFromPowerCut);
+    }
+  }, [moveNumFromPowerCut]);
   useEffect(() => {
     if (triggerSave) {
       saveMoveStateInBackendForPowerCut();
@@ -86,10 +87,10 @@ function OperationListScreen({ isBalance, moveNumFromPowerCut }) {
         setTimesRemaining(data.timesRemaining);
 
         console.log("Info from backend");
-        // console.log(names);
-        // console.log(times);
-        // console.log(timesRemaining);
-        // console.log(names);
+        console.log(names);
+        console.log(times);
+        console.log(timesRemaining);
+        console.log(names);
 
         setCurrentIndex(moveNumFromPowerCut);
       })
@@ -342,6 +343,7 @@ function OperationListScreen({ isBalance, moveNumFromPowerCut }) {
 
   useEffect(() => {
     console.log("Current Move:", currentMove);
+    console.log(currentIndex);
   }, [currentMove]);
 
   const checkCurrentMove = (move) => {
