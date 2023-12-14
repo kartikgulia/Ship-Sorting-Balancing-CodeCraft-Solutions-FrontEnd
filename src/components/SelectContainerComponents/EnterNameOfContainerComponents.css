@@ -1,0 +1,21 @@
+.container {
+  margin: 20px;
+}
+
+.input-style {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-bottom: 20px; /* Adjust margin as needed */
+}
+
+.button-style {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: black;
+  color: white;
+}
