@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import "./App.css";
+import React, { useState } from "react";
+import "./App.css";
 import SignIn from "./screens/signin";
 import ViewLog from "./screens/viewlogs";
 import ReportIssue from "./report-issue";
