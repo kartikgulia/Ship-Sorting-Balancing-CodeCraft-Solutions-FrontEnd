@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import './SelectContainersScreen.css'
+import "./SelectContainersScreen.css";
 // Top Half
 import GridComp from "../components/SelectContainerComponents/GridComponent";
 import YourSelectedContainers from "../components/SelectContainerComponents/YourSelectedContainers";
@@ -63,6 +63,7 @@ const SelectContainerScreen = () => {
   }
   return (
     <div>
+      <h1>Click to unload containers </h1>
       <div style={containerStyle}>
         <GridComp onSelectedItemsChange={handleSelectedItems} />
         <YourSelectedContainers selectedNames={selectedNames} />

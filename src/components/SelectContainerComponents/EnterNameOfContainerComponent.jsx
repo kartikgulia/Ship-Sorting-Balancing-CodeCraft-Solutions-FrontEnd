@@ -32,13 +32,21 @@ export default function EnterNameOfContainerComponent({ onNamesUpdate }) {
 
   return (
     <div className="container-style">
-      <h1> Enter name </h1>
+      <hr
+        style={{
+          height: "3px",
+          backgroundColor: "black",
+          border: "none",
+          margin: "30px 0",
+        }}
+      />
+      <h1> Below, enter the descriptions of the containers to be loaded </h1>
       <input
         type="text"
         value={inputName}
         onChange={handleInputChange}
-        // onPaste={(e) => e.preventDefault()}
-        // onCopy={(e) => e.preventDefault()}
+        onPaste={(e) => e.preventDefault()}
+        onCopy={(e) => e.preventDefault()}
         className="input-style"
       />
 
