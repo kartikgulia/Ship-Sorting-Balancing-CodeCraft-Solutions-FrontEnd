@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from "react";
 import GridComp from "../components/OperationAnimationComponents/GridComponent";
 import Spinner from "../components/OperationAnimationComponents/Spinner";
-import Home from './home';
+import Home from "./home";
 
-function OperationListScreen({ isBalance }) {
+function OperationListScreen({ isBalance, moveNumFromPowerCut }) {
   const [moves, setMoves] = useState([]);
   const [names, setNames] = useState([]);
   const [times, setTimes] = useState([]);
@@ -19,14 +19,34 @@ function OperationListScreen({ isBalance }) {
   const [showWeightInput, setShowWeightInput] = useState(false);
   const [weight, setWeight] = useState("");
 
-  useEffect(() => {
-    if (isBalance === 1) {
-      fetchBalanceData();
-    } else {
-      fetchTransferData();
-    }
-  }, [isBalance]);
+  const [triggerSave, setTriggerSave] = useState(false);
 
+  useEffect(() => {
+    if (moveNumFromPowerCut) {
+      fetchPowerCutData(moveNumFromPowerCut);
+    } else {
+      if (isBalance === 1) {
+        fetchBalanceData();
+      } else {
+        fetchTransferData();
+      }
+    }
+  }, [isBalance, moveNumFromPowerCut]);
+
+  useEffect(() => {
+    if (triggerSave) {
+      saveMoveStateInBackendForPowerCut();
+      setTriggerSave(false); // Reset the trigger
+    }
+  }, [triggerSave]); // Dependency array only includes triggerSave
+
+  useEffect(() => {
+    if (moves.length - 1 === currentIndex) {
+      setIsDone(true);
+    }
+    console.log(moves.length);
+    console.log(currentIndex);
+  }, [moves]);
   const resetFilesForNewShip = () => {
     fetch("http://127.0.0.1:5000/resetFilesForNewShip", {
       method: "GET",
@@ -41,14 +61,45 @@ function OperationListScreen({ isBalance }) {
       })
       .then((data) => {
         console.log("Success:", data);
-        if (alert("Please Remember to Email the Manifest to the captain"))
-         {return <Home/>};
+        if (alert("Please Remember to Email the Manifest to the captain")) {
+          return <Home />;
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
 
+  const fetchPowerCutData = (moveNumFromPowerCut) => {
+    console.log("Move number at operations screen: " + moveNumFromPowerCut);
+    fetch("http://127.0.0.1:5000/getOperationDataBackFromPowerCut")
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Network response was not ok.");
+      })
+      .then((data) => {
+        setMoves(data.moveCoordinates);
+        setNames(data.names);
+        setTimes(data.times);
+        setTimesRemaining(data.timesRemaining);
+
+        console.log("Info from backend");
+        // console.log(names);
+        // console.log(times);
+        // console.log(timesRemaining);
+        // console.log(names);
+
+        setCurrentIndex(moveNumFromPowerCut);
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
   const fetchBalanceData = () => {
     setIsLoading(true);
     fetch("http://127.0.0.1:5000/balance")
@@ -147,14 +198,41 @@ function OperationListScreen({ isBalance }) {
     }
   };
 
+  const saveMoveStateInBackendForPowerCut = () => {
+    console.log("Saving state into file in backend");
+
+    fetch("http://127.0.0.1:5000/saveCurrentIndexIntoStateFile", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ currentIndex: currentIndex + 1 }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok.");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Log entry successful:", data);
+      })
+      .catch((error) => {
+        console.error("Error writing to log:", error);
+      });
+  };
   const goToNextMove = () => {
     writeToLogDuringTransfer();
+
     setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length - 1));
+
     propagateWeights();
 
     if (currentIndex === moves.length - 2 || moves.length === 1) {
       setIsDone(true);
     }
+
+    saveMoveStateInBackendForPowerCut();
   };
 
   // const goToPreviousMove = () => {
@@ -165,6 +243,7 @@ function OperationListScreen({ isBalance }) {
   const handleDoneClick = () => {
     writeToLogDuringTransfer();
     setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, moves.length));
+    saveMoveStateInBackendForPowerCut();
     propagateWeights();
     setShowDowloadManifestButton(true);
     setIsDone(true);
