@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import GridComp from "../components/OperationAnimationComponents/GridComponent";
 import Spinner from "../components/OperationAnimationComponents/Spinner";

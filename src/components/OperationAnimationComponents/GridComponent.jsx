@@ -33,15 +33,7 @@ export default function GridComp({ currentMove, moveNum, currentName }) {
   useEffect(() => {
     fetchUpdatedManifestForMove();
   }, [fetchUpdatedManifestForMove]); // Dependency for useEffect
-  const formatMoveDisplay = (move) => {
-    let start = currentName;
 
-    let end =
-      move[1][0] === 0 && move[1][1] === 0
-        ? "Truck"
-        : `[${move[1].join(", ")}]`;
-    return `Current Move: From ${start} to ${end}`;
-  };
   return (
     <div style={gridStyle}>
       {gridData.map((row, rowIndex) => (
