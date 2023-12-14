@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import "./UploadManifest.css";
 
 const UploadScreen = ({ isBalance }) => {
-const UploadScreen = ({ isBalance }) => {
   const [uploaded, setUploaded] = useState(false);
 
   const handleUpload = async (event) => {
