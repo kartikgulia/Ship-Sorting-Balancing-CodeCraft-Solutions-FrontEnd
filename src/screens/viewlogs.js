@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Home from "./home";
 import "./viewlogs.css";
 
 const Viewlog = () => {
@@ -6,6 +7,8 @@ const Viewlog = () => {
   const [showText, setShowText] = useState(false);
   const [fileContent, setFileContent] = useState("");
   const [logContent, setLogContent] = useState("");
+
+  const [downloadComplete, setDownloadComplete] = useState(false);
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
@@ -66,9 +69,14 @@ const Viewlog = () => {
     const removeLog = await fetch("http://127.0.0.1:5000/removeLog");
     if (!nameResponse.ok) {
       throw new Error("Network response was not ok for removing log");
+    } else {
+      setDownloadComplete(true);
     }
   };
 
+  if (downloadComplete) {
+    return <Home />; // Render Home component after download
+  }
   return (
     <div className="viewlog-container">
       Password:
