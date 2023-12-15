@@ -54,9 +54,6 @@ const App = () => {
     "ReportIssue",
     "Tutorial",
     "Home",
-    "SelectContainers",
-    "UploadManifest",
-    "OperationList",
   ];
 
   return (
