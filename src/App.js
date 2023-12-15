@@ -25,15 +25,6 @@ const App = () => {
         return <ReportIssue />;
       case "Tutorial":
         return <Tutorial />;
-      case "Home":
-        return <Home />;
-      case "SelectContainers":
-        return <SelectContainerScreen />;
-      case "UploadManifest":
-        return <UploadScreen />;
-
-      case "OperationList":
-        return <OperationListScreen isBalance={0} />;
       default:
         return <Home />;
     }
@@ -53,10 +44,6 @@ const App = () => {
     "ViewLog",
     "ReportIssue",
     "Tutorial",
-    "Home",
-    "SelectContainers",
-    "UploadManifest",
-    "OperationList",
   ];
 
   return (
