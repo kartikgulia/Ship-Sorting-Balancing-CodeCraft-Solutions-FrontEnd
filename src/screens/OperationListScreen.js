@@ -427,10 +427,14 @@ function OperationListScreen({ isBalance, moveNumFromPowerCut }) {
 
           {!isLoading && showDoneAndTexts && (
             <div>
-              <h3>This move will take {currentTime} minutes </h3>
               <h3>
-                There are {currentTimeRemaining} minutes left until all moves
-                are done
+                This move will take {currentTime ? `${currentTime}` : "0"}{" "}
+                minutes
+              </h3>
+              <h3>
+                There are{" "}
+                {currentTimeRemaining ? `${currentTimeRemaining}` : "0"} minutes
+                left until all moves are done
               </h3>
             </div>
           )}
