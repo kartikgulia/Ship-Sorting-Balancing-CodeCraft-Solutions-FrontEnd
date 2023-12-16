@@ -15,7 +15,7 @@ const App = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState(false); // State to track dropdown visibility
 
- const renderComponent = () => {
+  const renderComponent = () => {
     switch (selectedOption) {
       case "SignIn":
         return <SignIn />;
@@ -39,9 +39,10 @@ const App = () => {
 
   const toggleDropdown = () => {
     setDropdownVisible(!dropdownVisible); // Toggle dropdown visibility
+    setSelectedOption(null);
   };
 
-   const dropdownOptions = [
+  const dropdownOptions = [
     "SignIn",
     "ViewLog",
     "ReportIssue",
