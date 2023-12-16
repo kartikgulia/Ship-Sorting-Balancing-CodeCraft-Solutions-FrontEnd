@@ -15,7 +15,7 @@ const App = () => {
   const [selectedOption, setSelectedOption] = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState(false); // State to track dropdown visibility
 
-  const renderComponent = () => {
+ const renderComponent = () => {
     switch (selectedOption) {
       case "SignIn":
         return <SignIn />;
@@ -27,13 +27,6 @@ const App = () => {
         return <Tutorial />;
       case "Home":
         return <Home />;
-      case "SelectContainers":
-        return <SelectContainerScreen />;
-      case "UploadManifest":
-        return <UploadScreen />;
-
-      case "OperationList":
-        return <OperationListScreen isBalance={0} />;
       default:
         return <Home />;
     }
@@ -48,7 +41,7 @@ const App = () => {
     setDropdownVisible(!dropdownVisible); // Toggle dropdown visibility
   };
 
-  const dropdownOptions = [
+   const dropdownOptions = [
     "SignIn",
     "ViewLog",
     "ReportIssue",
