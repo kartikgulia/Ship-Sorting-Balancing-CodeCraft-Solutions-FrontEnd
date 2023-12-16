@@ -25,6 +25,8 @@ const App = () => {
         return <ReportIssue />;
       case "Tutorial":
         return <Tutorial />;
+      case "Home":
+        return <Home />;
       default:
         return <Home />;
     }
@@ -44,6 +46,7 @@ const App = () => {
     "ViewLog",
     "ReportIssue",
     "Tutorial",
+    "Home",
   ];
 
   return (
